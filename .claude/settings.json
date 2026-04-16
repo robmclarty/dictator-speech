@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test)",
+      "Bash(npm run test)",
+      "Bash(npm run test:unit)",
+      "Bash(npm run test:integration)",
+      "Bash(npm run test:e2e)",
+      "Bash(npm run dev)",
+      "Bash(npm run lint)",
+      "Bash(npm run lint:ox)",
+      "Bash(npm run lint:tsc)",
+      "Bash(npm run lint:ast-grep)",
+      "Bash(npm run lint:knip)",
+      "Bash(npm run lint:fallow)",
+      "Bash(npm run prepare)"
+    ]
+  }
+}
