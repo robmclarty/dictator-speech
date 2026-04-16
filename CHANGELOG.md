@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.3
+
+- Add `CLAUDE.md` with the project's contract and agent-facing rules
+- Pre-approve all `npm run <script>` commands in `.claude/settings.json`
+- Add `.githooks/pre-commit` running `lint:ox`; wire `core.hooksPath` via a new `prepare` script
+- Add `.env.example` and `docs/secrets.md` documenting config and secret conventions
+
 ## 0.1.2
 
 - Rename package to `ts-ai-template`; reframe the repo as a reusable TypeScript project foundation
