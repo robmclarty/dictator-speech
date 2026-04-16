@@ -47,6 +47,7 @@ coverage/
 .stylelintcache
 .turbo/
 .rollup.cache/
+.firecrawl/
 
 # Editor / IDE
 .vscode/*
@@ -66,3 +67,4 @@ Desktop.ini
 
 # Ridgeline build artifacts
 .ridgeline/builds/
+.fallow/

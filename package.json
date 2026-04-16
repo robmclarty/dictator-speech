@@ -4,16 +4,26 @@
   "description": "",
   "author": "Rob McLarty",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run lint && npm run test:unit",
+    "test:unit": "vitest run --project unit",
+    "test:integration": "vitest run --project integration",
+    "test:e2e": "vitest run --project e2e",
     "dev": "",
-    "lint": ""
+    "lint": "npm run lint:ox && npm run lint:tsc && npm run lint:ast-grep && npm run lint:knip && npm run lint:fallow",
+    "lint:fallow": "fallow",
+    "lint:tsc": "tsc --noEmit",
+    "lint:knip": "knip",
+    "lint:ast-grep": "ast-grep scan",
+    "lint:ox": "oxlint"
   },
   "devDependencies": {
-    "@ast-grep/cli": "^0.42.1",
-    "fallow": "^2.38.0",
-    "knip": "^6.4.1",
-    "oxlint": "^1.60.0",
-    "tsup": "^8.5.1",
-    "vite": "^8.0.8"
+    "@ast-grep/cli": "0.42.1",
+    "@types/node": "25.6.0",
+    "fallow": "2.38.0",
+    "knip": "6.4.1",
+    "oxlint": "1.60.0",
+    "typescript": "6.0.2",
+    "vite": "8.0.8",
+    "vitest": "4.1.4"
   }
 }
