@@ -1,0 +1,19 @@
+{
+  "name": "hallpass",
+  "version": "0.1.0",
+  "description": "",
+  "author": "Rob McLarty",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "",
+    "lint": ""
+  },
+  "devDependencies": {
+    "@ast-grep/cli": "^0.42.1",
+    "fallow": "^2.38.0",
+    "knip": "^6.4.1",
+    "oxlint": "^1.60.0",
+    "tsup": "^8.5.1",
+    "vite": "^8.0.8"
+  }
+}
