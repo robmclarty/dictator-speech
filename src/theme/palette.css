@@ -1,0 +1,21 @@
+/* Tropical-banana-republic palette. Single source of truth for every color
+   in the app — component CSS references tokens via var(--color-*), never
+   hex literals. The achromatic poles (#000, #fff and their named aliases)
+   are forbidden anywhere; the no-bw-css ast-grep rule enforces that. */
+
+:root {
+  /* Seven brand tokens (must not change without a design review). */
+  --color-gold: #C9A961;
+  --color-palm: #4A7C59;
+  --color-coral: #D88B7A;
+  --color-parchment: #F5E6C8;
+  --color-banana: #F4D35E;
+  --color-mint: #B8D8C8;
+  --color-ink: #2B1810;
+
+  /* Derived tones — opacity / hover variants of the brand tokens. */
+  --color-gold-hover: #B8985A;
+  --color-overlay-banana: rgba(244, 211, 94, 0.6);
+  --color-shadow-ink: rgba(43, 24, 16, 0.15);
+  --color-ink-faded: rgba(43, 24, 16, 0.6);
+}

@@ -1,0 +1,10 @@
+id: no-lazy-portrait
+language: Tsx
+severity: error
+message: The Leader portrait is above the fold and central to the brand. loading="lazy" is forbidden on the portrait <img>.
+files:
+  - src/app/portrait.tsx
+rule:
+  any:
+    - pattern: <img $$$A loading="lazy" $$$B />
+    - pattern: <img $$$A loading={"lazy"} $$$B />

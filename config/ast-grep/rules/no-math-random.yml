@@ -1,0 +1,8 @@
+id: no-math-random
+language: TypeScript
+severity: error
+message: Math.random is forbidden in src/generator/** — all randomness must flow through the seeded PRNG.
+files:
+  - src/generator/**
+rule:
+  pattern: Math.random()

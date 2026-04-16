@@ -1,0 +1,14 @@
+id: single-class-component
+language: Tsx
+severity: error
+message: The only permitted class component is ErrorBoundary in src/app/error-boundary.tsx — React provides no functional equivalent for componentDidCatch. Every other component must be functional.
+files:
+  - src/**
+ignores:
+  - src/app/error-boundary.tsx
+rule:
+  any:
+    - pattern: class $NAME extends Component { $$$BODY }
+    - pattern: class $NAME extends React.Component { $$$BODY }
+    - pattern: class $NAME extends Component<$$$T> { $$$BODY }
+    - pattern: class $NAME extends React.Component<$$$T> { $$$BODY }

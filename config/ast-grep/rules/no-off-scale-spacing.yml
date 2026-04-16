@@ -1,0 +1,13 @@
+id: no-off-scale-spacing
+language: css
+severity: error
+message: padding/margin/gap must reference --space-* tokens (8px scale, defined in src/theme/spacing.css), never raw px literals. The 4px reservation is exposed as --space-icon-gap so it stays inside the token boundary.
+files:
+  - src/**/*.css
+ignores:
+  - src/theme/spacing.css
+rule:
+  all:
+    - pattern: "$A: $$$V;"
+    - regex: "^\\s*(padding|padding-top|padding-right|padding-bottom|padding-left|margin|margin-top|margin-right|margin-bottom|margin-left|gap|row-gap|column-gap)\\s*:"
+    - regex: "\\b\\d+px\\b"

@@ -1,0 +1,279 @@
+/* App shell layout. All color references resolve to palette tokens; all
+   spacing values resolve to the 8px scale. The single permitted UI
+   transition duration is 120ms — see motion.ts for named exceptions. */
+
+@import '../theme/palette.css';
+@import '../theme/typography.css';
+@import '../theme/spacing.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: var(--color-banana);
+  color: var(--color-ink);
+  font-family: var(--font-ui);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+/* Universal focus ring — coral 3px outline at 2px offset, with a 1px ink
+   hairline backstop on the outer edge. The hairline carries the WCAG 1.4.11
+   contrast (coral alone is below 3:1 against gold/palm/parchment); the
+   coral provides the brand "feel". See contrast.test.ts. */
+:focus-visible {
+  outline: 3px solid var(--color-coral);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--color-ink);
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: var(--layout-page-padding);
+  min-height: 100vh;
+}
+
+.app-header {
+  margin: 0;
+}
+
+.app-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: var(--font-size-page-title);
+  line-height: var(--line-height-page-title);
+  color: var(--color-ink);
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1;
+}
+
+@media (min-width: 768px) {
+  .app-main {
+    flex-direction: row;
+    align-items: stretch;
+    gap: var(--layout-column-gap);
+  }
+}
+
+.portrait {
+  flex: 0 0 33%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.portrait-image {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: 240px;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (min-width: 768px) {
+  .portrait-image {
+    max-height: 600px;
+  }
+}
+
+.teleprompter {
+  flex: 1 1 67%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-parchment);
+  border: 2px solid var(--color-gold);
+  border-radius: 0;
+  box-shadow: inset 0 0 24px var(--color-shadow-ink);
+  padding: var(--space-4);
+  min-height: 240px;
+  transition: border-color 120ms ease-out;
+}
+
+.teleprompter-idle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: var(--font-size-teleprompter);
+  line-height: var(--line-height-teleprompter);
+  color: var(--color-ink-faded);
+  text-align: center;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--layout-control-row-gap);
+  align-items: flex-end;
+}
+
+.control-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--font-size-control);
+  color: var(--color-ink);
+}
+
+.control-label {
+  font-size: var(--font-size-control);
+  color: var(--color-ink);
+}
+
+.control-select,
+.control-slider {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-control);
+  color: var(--color-ink);
+  background: var(--color-mint);
+  border: 1px solid var(--color-palm);
+  border-radius: 4px;
+  padding: var(--space-1);
+  transition: border-color 120ms ease-out;
+}
+
+.control-select:hover,
+.control-slider:hover {
+  border-color: var(--color-gold);
+}
+
+.control-slider {
+  width: 200px;
+  padding: 0;
+  height: 24px;
+}
+
+.primary-button {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-control);
+  font-weight: 700;
+  color: var(--color-ink);
+  background: var(--color-gold);
+  border: 2px solid var(--color-gold);
+  border-radius: 4px;
+  padding: var(--space-1) var(--space-2);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--color-ink);
+  transition: transform 120ms ease-out;
+}
+
+.primary-button:hover {
+  transform: translate(-2px, -2px);
+  background: var(--color-gold-hover);
+}
+
+.primary-button:active {
+  transform: translate(0, 0);
+  box-shadow: 0 0 0 var(--color-ink);
+}
+
+.primary-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.footer {
+  margin-top: var(--space-4);
+  text-align: center;
+}
+
+.footer-disclaimer {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--font-size-footer);
+  font-style: italic;
+  color: var(--color-ink);
+}
+
+/* Error boundary fallback */
+.error-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  background: var(--color-overlay-banana);
+  padding: var(--layout-page-padding);
+  z-index: 100;
+}
+
+.error-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 480px;
+  width: 100%;
+  padding: var(--space-6);
+  background: var(--color-parchment);
+  border: 2px solid var(--color-gold);
+  border-radius: 0;
+  text-align: center;
+}
+
+.error-ornament {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-headline {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--font-size-section-header);
+  line-height: var(--line-height-section-header);
+  color: var(--color-ink);
+}
+
+.error-body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--font-size-body);
+  color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+  .primary-button:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 479px) {
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .control-slider {
+    width: 100%;
+  }
+}

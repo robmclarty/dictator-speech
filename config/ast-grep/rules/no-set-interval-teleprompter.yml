@@ -1,0 +1,11 @@
+id: no-set-interval-teleprompter
+language: Tsx
+severity: error
+message: setInterval is forbidden in the teleprompter; the reveal cadence must flow through requestAnimationFrame.
+files:
+  - src/app/teleprompter.tsx
+rule:
+  any:
+    - pattern: setInterval($$$ARGS)
+    - pattern: window.setInterval($$$ARGS)
+    - pattern: globalThis.setInterval($$$ARGS)

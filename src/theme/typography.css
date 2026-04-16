@@ -1,0 +1,35 @@
+/* Self-hosted Playfair Display 700 + 900 (latin subset). UI body uses the
+   condensed sans system stack; no monospace anywhere. */
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/PlayfairDisplay-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('./fonts/PlayfairDisplay-900.woff2') format('woff2');
+}
+
+:root {
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Helvetica Neue Condensed', 'Arial Narrow', system-ui, sans-serif;
+
+  --font-size-page-title: 48px;
+  --font-size-section-header: 28px;
+  --font-size-teleprompter: 20px;
+  --font-size-body: 16px;
+  --font-size-control: 14px;
+  --font-size-footer: 12px;
+
+  --line-height-page-title: 1.1;
+  --line-height-section-header: 1.2;
+  --line-height-teleprompter: 1.6;
+  --line-height-body: 1.4;
+}

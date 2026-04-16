@@ -1,9 +1,16 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "entry": ["src/index.ts", "src/main.ts!", "src/main.tsx!"],
-  "project": ["src/**/*.{ts,tsx}", "config/**/*.ts", "test/**/*.ts"],
+  "entry": [
+    "index.html",
+    "src/main.tsx",
+    "src/theme/motion.ts",
+    "src/theme/icons.tsx",
+    "src/app/copy.ts"
+  ],
+  "project": ["src/**/*.{ts,tsx}", "test/**/*.ts"],
   "ignoreBinaries": [],
   "ignoreDependencies": [],
+  "ignoreExportsUsedInFile": true,
   "vite": {
     "config": ["vite.config.{ts,js}"]
   },

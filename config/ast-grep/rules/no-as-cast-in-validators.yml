@@ -1,0 +1,11 @@
+id: no-as-cast-in-validators
+language: TypeScript
+severity: error
+message: "`as` casts are forbidden in validation boundaries — narrow types via parser predicates instead."
+files:
+  - src/data/chunks.schema.ts
+  - src/storage/use-local-storage.ts
+rule:
+  any:
+    - kind: as_expression
+    - kind: type_assertion

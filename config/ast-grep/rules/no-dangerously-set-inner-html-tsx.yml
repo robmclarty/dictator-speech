@@ -1,0 +1,10 @@
+id: no-dangerously-set-inner-html-tsx
+language: Tsx
+severity: error
+message: dangerouslySetInnerHTML is forbidden — chunk text and all in-app strings render as plain text. Defense in depth even though no remote content is fetched.
+files:
+  - src/**
+rule:
+  any:
+    - pattern: <$T $$$A dangerouslySetInnerHTML={$X} $$$B />
+    - pattern: <$T $$$A dangerouslySetInnerHTML={$X} $$$B>$$$BODY</$T>

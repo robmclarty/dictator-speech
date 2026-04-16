@@ -1,0 +1,8 @@
+id: no-prefers-color-scheme
+language: css
+severity: error
+message: prefers-color-scheme is forbidden — the sun-bleached palette IS the brand. No dark mode, no theme toggle.
+files:
+  - src/**/*.css
+rule:
+  pattern: "@media (prefers-color-scheme: $X) { $$$BODY }"

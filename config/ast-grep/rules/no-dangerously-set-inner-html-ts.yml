@@ -1,0 +1,8 @@
+id: no-dangerously-set-inner-html-ts
+language: TypeScript
+severity: error
+message: dangerouslySetInnerHTML is forbidden — chunk text and all in-app strings render as plain text.
+files:
+  - src/**
+rule:
+  pattern: dangerouslySetInnerHTML

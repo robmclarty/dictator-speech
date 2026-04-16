@@ -1,0 +1,15 @@
+id: no-off-cadence-transition
+language: css
+severity: error
+message: All UI transitions must use 120ms ease-out. Named exceptions (toast, skip fade, cursor fade) flow through src/theme/motion.ts and reach CSS as var(--motion-*) custom properties — never raw durations.
+files:
+  - src/**/*.css
+rule:
+  all:
+    - pattern: "$A: $$$V;"
+    - regex: "^\\s*(transition|transition-duration|animation|animation-duration)\\s*:"
+    - regex: "\\b\\d+m?s\\b"
+    - not:
+        any:
+          - regex: "\\b120ms\\b"
+          - regex: "\\b0m?s\\b"

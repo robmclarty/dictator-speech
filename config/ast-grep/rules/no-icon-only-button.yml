@@ -1,0 +1,8 @@
+id: no-icon-only-button
+language: Tsx
+severity: error
+message: Icon-only buttons are forbidden. Every interactive control needs a visible 14px text label beside the icon.
+files:
+  - src/**
+rule:
+  pattern: <button $$$PROPS><svg $$$SVG/></button>

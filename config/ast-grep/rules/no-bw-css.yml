@@ -1,0 +1,10 @@
+id: no-bw-css
+language: css
+severity: error
+message: Pure black/white are forbidden — every surface must feel sun-faded. Use --color-ink or --color-parchment.
+files:
+  - src/**/*.css
+rule:
+  all:
+    - pattern: "$A: $$$V;"
+    - regex: "(?i)(^|[^a-z0-9_-])(#000|#fff|#000000|#ffffff|black|white)($|[^a-z0-9_-])"

@@ -1,0 +1,11 @@
+id: no-any-in-validators
+language: TypeScript
+severity: error
+message: "`any` is forbidden in validation boundaries — use a typed parser narrowing unknown -> T."
+files:
+  - src/data/chunks.schema.ts
+  - src/storage/use-local-storage.ts
+rule:
+  any:
+    - pattern: "any"
+      kind: predefined_type

@@ -1,0 +1,14 @@
+id: single-class-component-ts
+language: TypeScript
+severity: error
+message: Only ErrorBoundary may extend React.Component. Other modules must be functional.
+files:
+  - src/**
+ignores:
+  - src/app/error-boundary.tsx
+rule:
+  any:
+    - pattern: class $NAME extends Component { $$$BODY }
+    - pattern: class $NAME extends React.Component { $$$BODY }
+    - pattern: class $NAME extends Component<$$$T> { $$$BODY }
+    - pattern: class $NAME extends React.Component<$$$T> { $$$BODY }

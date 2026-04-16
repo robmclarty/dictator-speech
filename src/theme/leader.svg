@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800" role="img" aria-label="Leader portrait">
+  <title>The Leader</title>
+  <defs>
+    <linearGradient id="grain" x1="0" y1="0" x2="0" y2="1" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F5E6C8" stop-opacity="0"/>
+      <stop offset="1" stop-color="#F5E6C8" stop-opacity="0.18"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sun-bleached parchment vignette behind the bust (transparent base; this is a soft tint) -->
+  <ellipse cx="300" cy="380" rx="260" ry="320" fill="url(#grain)"/>
+
+  <!-- Shoulders / dress-uniform tunic -->
+  <path d="M70 800 C 90 620, 170 560, 220 540 L 380 540 C 430 560, 510 620, 530 800 Z"
+        fill="#2B1810" stroke="#C9A961" stroke-width="6"/>
+
+  <!-- Sash across the chest -->
+  <path d="M210 552 L 410 552 L 470 800 L 410 800 L 270 600 Z"
+        fill="#D88B7A" stroke="#C9A961" stroke-width="4" opacity="0.95"/>
+
+  <!-- Sash rosette -->
+  <circle cx="280" cy="612" r="22" fill="#C9A961" stroke="#2B1810" stroke-width="3"/>
+  <circle cx="280" cy="612" r="9" fill="#2B1810"/>
+
+  <!-- Lapels -->
+  <path d="M220 540 L 300 640 L 232 720 Z" fill="#4A7C59" stroke="#C9A961" stroke-width="3"/>
+  <path d="M380 540 L 300 640 L 368 720 Z" fill="#4A7C59" stroke="#C9A961" stroke-width="3"/>
+
+  <!-- Epaulettes -->
+  <path d="M120 540 L 230 530 L 240 580 L 130 600 Z" fill="#C9A961" stroke="#2B1810" stroke-width="3"/>
+  <path d="M480 540 L 370 530 L 360 580 L 470 600 Z" fill="#C9A961" stroke="#2B1810" stroke-width="3"/>
+  <!-- Epaulette fringe -->
+  <g fill="#C9A961" stroke="#2B1810" stroke-width="2">
+    <rect x="130" y="600" width="6" height="22"/>
+    <rect x="146" y="602" width="6" height="22"/>
+    <rect x="162" y="600" width="6" height="22"/>
+    <rect x="178" y="604" width="6" height="22"/>
+    <rect x="194" y="602" width="6" height="22"/>
+    <rect x="210" y="600" width="6" height="22"/>
+    <rect x="226" y="602" width="6" height="22"/>
+    <rect x="368" y="602" width="6" height="22"/>
+    <rect x="384" y="600" width="6" height="22"/>
+    <rect x="400" y="602" width="6" height="22"/>
+    <rect x="416" y="604" width="6" height="22"/>
+    <rect x="432" y="600" width="6" height="22"/>
+    <rect x="448" y="602" width="6" height="22"/>
+    <rect x="464" y="600" width="6" height="22"/>
+  </g>
+
+  <!-- Improbable row of medals (left chest) -->
+  <g stroke="#2B1810" stroke-width="2.5">
+    <rect x="160" y="650" width="34" height="14" fill="#D88B7A"/>
+    <circle cx="177" cy="690" r="16" fill="#C9A961"/>
+    <polygon points="177,680 180,688 188,688 182,693 184,701 177,696 170,701 172,693 166,688 174,688" fill="#2B1810"/>
+
+    <rect x="200" y="650" width="34" height="14" fill="#4A7C59"/>
+    <circle cx="217" cy="690" r="16" fill="#C9A961"/>
+    <polygon points="217,680 220,688 228,688 222,693 224,701 217,696 210,701 212,693 206,688 214,688" fill="#2B1810"/>
+
+    <rect x="240" y="650" width="34" height="14" fill="#B8D8C8"/>
+    <circle cx="257" cy="690" r="16" fill="#C9A961"/>
+    <polygon points="257,680 260,688 268,688 262,693 264,701 257,696 250,701 252,693 246,688 254,688" fill="#2B1810"/>
+
+    <rect x="160" y="710" width="34" height="14" fill="#F4D35E"/>
+    <circle cx="177" cy="750" r="14" fill="#C9A961"/>
+    <rect x="200" y="710" width="34" height="14" fill="#D88B7A"/>
+    <circle cx="217" cy="750" r="14" fill="#C9A961"/>
+    <rect x="240" y="710" width="34" height="14" fill="#4A7C59"/>
+    <circle cx="257" cy="750" r="14" fill="#C9A961"/>
+  </g>
+
+  <!-- Decorative grand cross hanging from sash rosette -->
+  <g stroke="#2B1810" stroke-width="3">
+    <path d="M280 634 L 280 700 M 254 667 L 306 667" fill="none" stroke-linecap="round"/>
+    <circle cx="280" cy="667" r="14" fill="#C9A961"/>
+  </g>
+
+  <!-- Neck -->
+  <path d="M260 480 L 340 480 L 350 552 L 250 552 Z" fill="#F5E6C8" stroke="#2B1810" stroke-width="3"/>
+  <!-- Neck shadow -->
+  <path d="M260 540 Q 300 558 340 540 L 340 552 L 260 552 Z" fill="#C9A961" opacity="0.35"/>
+
+  <!-- Head: chest-up 3/4 view, slightly turned right -->
+  <path d="M210 320
+           C 210 220, 240 170, 305 170
+           C 380 170, 410 230, 410 320
+           C 410 410, 380 480, 305 490
+           C 240 490, 210 410, 210 320 Z"
+        fill="#F5E6C8" stroke="#2B1810" stroke-width="4"/>
+
+  <!-- Ear (right side, far ear barely visible) -->
+  <path d="M408 320 C 425 320, 425 360, 410 365 L 408 360 Z" fill="#F5E6C8" stroke="#2B1810" stroke-width="3"/>
+  <path d="M414 332 C 418 340, 418 352, 414 358" fill="none" stroke="#2B1810" stroke-width="2"/>
+
+  <!-- Hair / side-parted military cut -->
+  <path d="M210 270
+           C 220 200, 270 160, 330 168
+           C 390 178, 410 230, 410 290
+           C 395 250, 360 220, 320 218
+           C 290 218, 250 234, 222 280 Z"
+        fill="#2B1810"/>
+  <!-- Sideburns -->
+  <path d="M222 290 L 230 360 L 244 360 L 240 300 Z" fill="#2B1810"/>
+  <path d="M398 290 L 390 360 L 376 360 L 380 300 Z" fill="#2B1810"/>
+
+  <!-- Brow ridge -->
+  <path d="M242 312 Q 270 298 298 314" fill="none" stroke="#2B1810" stroke-width="4" stroke-linecap="round"/>
+  <path d="M330 314 Q 358 300 386 312" fill="none" stroke="#2B1810" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Eyes (stern, narrow) -->
+  <path d="M252 340 Q 270 333 290 340" fill="none" stroke="#2B1810" stroke-width="3" stroke-linecap="round"/>
+  <path d="M338 340 Q 356 333 376 340" fill="none" stroke="#2B1810" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="271" cy="343" r="3" fill="#2B1810"/>
+  <circle cx="357" cy="343" r="3" fill="#2B1810"/>
+
+  <!-- Nose: confident, straight -->
+  <path d="M312 348 L 304 408 Q 312 416, 322 412 L 320 360 Z" fill="#F5E6C8" stroke="#2B1810" stroke-width="2.5"/>
+  <path d="M306 410 Q 312 416 320 410" fill="none" stroke="#2B1810" stroke-width="2"/>
+
+  <!-- The Improbable Moustache -->
+  <path d="M260 432
+           Q 280 420, 300 432
+           Q 320 444, 312 452
+           Q 290 456, 264 452
+           Q 252 448, 260 432 Z"
+        fill="#2B1810" stroke="#2B1810" stroke-width="2"/>
+  <path d="M340 432
+           Q 320 420, 300 432
+           Q 280 444, 288 452
+           Q 310 456, 336 452
+           Q 348 448, 340 432 Z"
+        fill="#2B1810" stroke="#2B1810" stroke-width="2"/>
+  <!-- Moustache curls (the absurd waxed tips) -->
+  <path d="M260 438 Q 244 440, 240 432 Q 240 426, 248 428" fill="none" stroke="#2B1810" stroke-width="3" stroke-linecap="round"/>
+  <path d="M340 438 Q 356 440, 360 432 Q 360 426, 352 428" fill="none" stroke="#2B1810" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Mouth (small, set under the moustache) -->
+  <path d="M286 466 Q 300 470, 314 466" fill="none" stroke="#2B1810" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Chin shadow -->
+  <path d="M280 478 Q 300 488, 320 478" fill="none" stroke="#2B1810" stroke-width="2"/>
+
+  <!-- Decorative cap visor / forehead band hint (subtle gold trim across hairline) -->
+  <path d="M232 240 Q 305 200, 388 244" fill="none" stroke="#C9A961" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Faint ink grain across face (sun-bleached) -->
+  <g fill="#2B1810" opacity="0.04">
+    <circle cx="252" cy="380" r="2"/>
+    <circle cx="280" cy="400" r="1.5"/>
+    <circle cx="330" cy="395" r="2"/>
+    <circle cx="360" cy="378" r="1.5"/>
+    <circle cx="300" cy="430" r="1.5"/>
+    <circle cx="240" cy="360" r="1.5"/>
+    <circle cx="380" cy="360" r="2"/>
+  </g>
+</svg>

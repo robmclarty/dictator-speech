@@ -1,0 +1,11 @@
+id: no-set-interval-generator
+language: TypeScript
+severity: error
+message: setInterval is forbidden in generator code; use requestAnimationFrame so cadence cannot drift.
+files:
+  - src/generator/**
+rule:
+  any:
+    - pattern: setInterval($$$ARGS)
+    - pattern: window.setInterval($$$ARGS)
+    - pattern: globalThis.setInterval($$$ARGS)
