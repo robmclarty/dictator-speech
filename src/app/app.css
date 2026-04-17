@@ -58,6 +58,17 @@ body,
   min-height: 100vh;
 }
 
+/* Visual order is driven by CSS `order` while DOM order places Controls
+   before <main>. The DOM order pins tab sequence at mood → length →
+   generate → skip → copy → favourite; the order values below restore
+   the visual layout (header on top, teleprompter next, controls under). */
+.app-header { order: 0; }
+.app-main { order: 1; }
+.controls { order: 2; }
+.actions-row { order: 3; }
+.history { order: 4; }
+.footer { order: 5; }
+
 .app-header {
   margin: 0;
 }
@@ -108,9 +119,20 @@ body,
   }
 }
 
-.teleprompter {
+/* Positioning wrapper around the teleprompter. The Skip button lives
+   here (as a sibling of the teleprompter <section>) so it can be
+   `position: absolute` against this frame — which fills the teleprompter
+   column on desktop and stacks below the portrait on mobile. */
+.teleprompter-frame {
   position: relative;
   flex: 1 1 67%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.teleprompter {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: stretch;

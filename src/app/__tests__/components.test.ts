@@ -47,6 +47,7 @@ describe('Teleprompter (idle state)', () => {
         text: '',
         generationId: 0,
         reduceMotion: true,
+        skipSignal: 0,
         onComplete: () => {},
       }),
     )

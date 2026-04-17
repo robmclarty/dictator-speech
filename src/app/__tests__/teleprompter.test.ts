@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { createElement, useState } from 'react'
+import { createElement } from 'react'
 import { act } from 'react-dom/test-utils'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -69,6 +69,7 @@ describe('Teleprompter rendering', () => {
         text: '',
         generationId: 0,
         reduceMotion: true,
+        skipSignal: 0,
         onComplete,
       }),
     )
@@ -89,6 +90,7 @@ describe('Teleprompter rendering', () => {
         text,
         generationId: 1,
         reduceMotion: true,
+        skipSignal: 0,
         onComplete,
       }),
     )
@@ -106,6 +108,7 @@ describe('Teleprompter rendering', () => {
         text,
         generationId: 1,
         reduceMotion: true,
+        skipSignal: 0,
         onComplete,
       }),
     )
@@ -120,6 +123,7 @@ describe('Teleprompter rendering', () => {
           text: text2,
           generationId: 2,
           reduceMotion: true,
+          skipSignal: 0,
           onComplete,
         }),
       )
@@ -127,47 +131,38 @@ describe('Teleprompter rendering', () => {
     expect(live?.textContent).toBe(text2)
   })
 
-  it('shows the Skip button during reveal and hides it once done', () => {
-    let setReveal: ((on: boolean) => void) | null = null
-    function Wrapper(): React.ReactElement {
-      const [revealing, setRevealing] = useState(true)
-      setReveal = (on: boolean) => setRevealing(on)
-      const text = revealing ? 'Hello there comrades.' : ''
-      return createElement(Teleprompter, {
-        text,
-        generationId: revealing ? 1 : 0,
-        reduceMotion: false,
-        onComplete: () => setRevealing(false),
-      })
-    }
-    harness = mountInDocument(createElement(Wrapper))
-    const skip = harness.container.querySelector('.skip-button')
-    expect(skip).not.toBeNull()
-    act(() => {
-      ;(skip as HTMLButtonElement).click()
-    })
-    // After skip-then-onComplete-driven unmount of text, idle returns.
-    expect(harness.container.querySelector('.teleprompter-idle')).not.toBeNull()
-    // Just to silence unused-warnings on the helper.
-    expect(typeof setReveal).toBe('function')
-  })
-
-  it('mounts the Skip button under reduced motion and remains operable', () => {
+  it('does not render the Skip button inside the teleprompter (it lives in the app-level tab order)', () => {
+    // Criteria 6/23/27/38: Skip must appear after Generate in tab order.
+    // The fix is to lift Skip out of Teleprompter into a sibling of the
+    // teleprompter <section>, rendered by App. This test pins that the
+    // teleprompter itself never mounts its own .skip-button.
     const onComplete = vi.fn()
-    const text = 'Brief speech.'
     harness = mountInDocument(
       createElement(Teleprompter, {
-        text,
+        text: 'Hello comrades.',
         generationId: 1,
-        reduceMotion: true,
+        reduceMotion: false,
+        skipSignal: 0,
         onComplete,
       }),
     )
-    // Reduced motion completes immediately; Skip is therefore not shown
-    // because reveal is already done. This matches acceptance criterion 18:
-    // skip remains rendered "during reveal" — under reduced motion the
-    // reveal phase has zero duration, so the post-reveal state is correct.
     expect(harness.container.querySelector('.skip-button')).toBeNull()
-    expect(onComplete).toHaveBeenCalled()
+  })
+
+  it('ignores the initial skipSignal value on mount', () => {
+    const onComplete = vi.fn()
+    // The reveal is in-flight; if the initial skipSignal value triggered
+    // skip, onComplete would fire synchronously on mount. Under normal
+    // motion it should only fire after the 800ms cursor-fade-out timer.
+    harness = mountInDocument(
+      createElement(Teleprompter, {
+        text: 'Hello.',
+        generationId: 1,
+        reduceMotion: false,
+        skipSignal: 7,
+        onComplete,
+      }),
+    )
+    expect(onComplete).not.toHaveBeenCalled()
   })
 })

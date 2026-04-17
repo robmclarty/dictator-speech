@@ -7,11 +7,15 @@
  *
  * Cadence flows through `requestAnimationFrame` only — the no-set-interval
  * ast-grep rule continues to enforce that.
+ *
+ * The Skip button itself is rendered by the parent (App) — that is what
+ * pins the keyboard tab order at mood → length → generate → skip → copy →
+ * favourite. The parent drives skipping by incrementing `skipSignal`.
  */
 
 import { useEffect, useRef, useState } from 'react'
 import { CHARS_PER_SECOND, MOTION_EXCEPTIONS } from '../theme/motion'
-import { IDLE_PROMPT, SKIP_LABEL } from './copy'
+import { IDLE_PROMPT } from './copy'
 
 interface TeleprompterProps {
   readonly text: string
@@ -23,6 +27,14 @@ interface TeleprompterProps {
    * triggers a new reveal because this counter changes.
    */
   readonly generationId: number
+  /**
+   * Bumped by the parent when the user presses Skip. The teleprompter
+   * watches this counter and, on each increment, jumps the visible text
+   * to the full input and runs the normal completion pathway (cursor
+   * lingers for `cursorFadeOutMs` then fades, onComplete fires).
+   * Initial value (typically 0) is ignored on mount.
+   */
+  readonly skipSignal: number
 }
 
 interface RevealState {
@@ -50,19 +62,28 @@ export function Teleprompter({
   onComplete,
   reduceMotion,
   generationId,
+  skipSignal,
 }: TeleprompterProps) {
   const [reveal, setReveal] = useState<RevealState>(INITIAL_REVEAL)
   const [cursorVisible, setCursorVisible] = useState<boolean>(false)
   const liveRef = useRef<HTMLDivElement | null>(null)
   const surfaceRef = useRef<HTMLDivElement | null>(null)
   const cursorAnchorRef = useRef<HTMLSpanElement | null>(null)
+  // Skip function set up by the reveal effect; called by the skip-signal
+  // effect. Nulled when no active reveal exists.
+  const skipFnRef = useRef<(() => void) | null>(null)
+  // Initial skipSignal is ignored so the component does not accidentally
+  // "skip" on first mount.
+  const prevSkipRef = useRef<number>(skipSignal)
 
-  // Reset reveal whenever a new generation starts. The visible-text path
-  // depends on `text`; the aria-live path is updated once below.
+  // Reveal effect. Sourced from text/reduceMotion/generationId; identity
+  // churn on onComplete is harmless because the cleanup cancels any
+  // in-flight rAF and timer before the next run.
   useEffect(() => {
     if (text.length === 0) {
       setReveal(INITIAL_REVEAL)
       setCursorVisible(false)
+      skipFnRef.current = null
       return
     }
     // Mirror the complete speech into the aria-live region exactly once
@@ -74,6 +95,7 @@ export function Teleprompter({
     if (reduceMotion) {
       setReveal({ visible: text.length, done: true })
       setCursorVisible(false)
+      skipFnRef.current = null
       onComplete()
       return
     }
@@ -85,18 +107,30 @@ export function Teleprompter({
     let startTime = 0
     let cancelled = false
     let completionTimer: ReturnType<typeof setTimeout> | null = null
+    let done = false
+
+    // Schedule the standard completion path: flip reveal.done, keep the
+    // cursor visible (stops blinking via the --static class) for
+    // cursorFadeOutMs, then hide cursor + fire onComplete. Criterion 15:
+    // cursor must linger 800-1000ms past the final character before
+    // disappearing, so we do NOT mask cursor visibility on reveal.done.
+    const scheduleCompletion = (): void => {
+      if (done) return
+      done = true
+      setReveal({ visible: text.length, done: true })
+      completionTimer = setTimeout(() => {
+        if (cancelled) return
+        setCursorVisible(false)
+        onComplete()
+      }, MOTION_EXCEPTIONS.cursorFadeOutMs)
+    }
 
     const tick = (now: number): void => {
       if (cancelled) return
       if (startTime === 0) startTime = now
       const visible = visibleAtElapsed(now - startTime, text.length)
       if (visible >= text.length) {
-        setReveal({ visible: text.length, done: true })
-        completionTimer = setTimeout(() => {
-          if (cancelled) return
-          setCursorVisible(false)
-          onComplete()
-        }, MOTION_EXCEPTIONS.cursorFadeOutMs)
+        scheduleCompletion()
         return
       }
       setReveal({ visible, done: false })
@@ -105,15 +139,30 @@ export function Teleprompter({
 
     rafHandle = requestAnimationFrame(tick)
 
+    skipFnRef.current = (): void => {
+      if (done || cancelled) return
+      if (rafHandle !== 0) cancelAnimationFrame(rafHandle)
+      scheduleCompletion()
+    }
+
     return () => {
       cancelled = true
       if (rafHandle !== 0) cancelAnimationFrame(rafHandle)
       if (completionTimer !== null) clearTimeout(completionTimer)
+      skipFnRef.current = null
     }
-    // generationId / text / reduceMotion form the reveal contract.
-    // onComplete is in deps for correctness; identity churn is harmless
-    // because the cleanup cancels the in-flight rAF and timer.
   }, [text, reduceMotion, generationId, onComplete])
+
+  // Skip signal effect: when the parent increments skipSignal, invoke the
+  // currently-installed skip function. Initial mount is ignored via the
+  // prevSkipRef guard. Under reduced motion (or once reveal has completed)
+  // skipFnRef is null and the call is a safe no-op — criterion 22.
+  useEffect(() => {
+    if (prevSkipRef.current === skipSignal) return
+    prevSkipRef.current = skipSignal
+    const fn = skipFnRef.current
+    if (fn !== null) fn()
+  }, [skipSignal])
 
   // Auto-scroll: when the cursor crosses 80% of the surface viewport,
   // scroll the next line into view. Behaviour switches under reduced
@@ -145,13 +194,12 @@ export function Teleprompter({
   }
 
   const visibleText = text.slice(0, reveal.visible)
-  const showCursor = cursorVisible && !reveal.done
-
-  const handleSkip = (): void => {
-    setReveal({ visible: text.length, done: true })
-    setCursorVisible(false)
-    onComplete()
-  }
+  // Cursor visibility is driven solely by cursorVisible. reveal.done only
+  // switches the cursor from blinking to static — it never hides it. The
+  // cursorFadeOutMs timer is what flips cursorVisible to false.
+  const cursorClass = reveal.done
+    ? 'teleprompter-cursor teleprompter-cursor--static'
+    : 'teleprompter-cursor'
 
   return (
     <section className="teleprompter" aria-label="Teleprompter">
@@ -159,32 +207,14 @@ export function Teleprompter({
         <p className="teleprompter-body" aria-hidden="true">
           {visibleText}
           <span ref={cursorAnchorRef} className="teleprompter-cursor-anchor">
-            {showCursor && (
-              <span
-                className={
-                  reduceMotion
-                    ? 'teleprompter-cursor teleprompter-cursor--static'
-                    : 'teleprompter-cursor'
-                }
-                aria-hidden="true"
-              >
+            {cursorVisible && (
+              <span className={cursorClass} aria-hidden="true">
                 {'\u258C'}
               </span>
             )}
           </span>
         </p>
       </div>
-      {!reveal.done && (
-        <button
-          type="button"
-          className={
-            reduceMotion ? 'skip-button skip-button--instant' : 'skip-button'
-          }
-          onClick={handleSkip}
-        >
-          {SKIP_LABEL}
-        </button>
-      )}
       <div ref={liveRef} className="visually-hidden" aria-live="polite" aria-atomic="true" />
     </section>
   )

@@ -3,6 +3,13 @@
  * media query, the toast visibility, and the persisted game state. Every
  * piece of mutable state lives here so the controls, teleprompter, and
  * history list can stay focused on rendering.
+ *
+ * DOM ordering note: `.controls` appears BEFORE `.app-main` in the DOM
+ * (and the Skip button sits inside `.app-main`'s teleprompter-frame). CSS
+ * `order` on the flex column reverses the visual placement so the
+ * teleprompter still sits above the controls. This is the mechanical
+ * fix that pins keyboard tab order at mood → length → generate → skip →
+ * copy → favourite (acceptance criteria 6/23/27/38).
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -14,7 +21,7 @@ import { useGameState } from '../storage/use-local-storage'
 import type { HistoryEntry } from '../storage/game-state'
 import { installMotionCssVars } from '../theme/motion'
 import { Controls } from './controls'
-import { copyText, COPY_LABEL } from './copy'
+import { copyText, COPY_LABEL, SKIP_LABEL } from './copy'
 import { Copy as CopyIcon } from '../theme/icons'
 import { ErrorBoundary } from './error-boundary'
 import { Footer } from './footer'
@@ -61,6 +68,10 @@ export function App() {
   const [active, setActive] = useState<ActiveSpeech | null>(null)
   const [revealComplete, setRevealComplete] = useState<boolean>(false)
   const [toastVisible, setToastVisible] = useState<boolean>(false)
+  // Skip counter — bumped every time the user presses Skip. Teleprompter
+  // watches this via its skipSignal prop. Initial value of 0 is the
+  // no-skip sentinel.
+  const [skipSignal, setSkipSignal] = useState<number>(0)
 
   useEffect(() => {
     installMotionCssVars()
@@ -126,8 +137,19 @@ export function App() {
 
   const handleDismissToast = useCallback(() => setToastVisible(false), [])
 
+  const handleSkip = useCallback(() => {
+    setSkipSignal((s) => s + 1)
+  }, [])
+
   const copyDisabled = !revealComplete || active === null
   const generateDisabled = false
+  // Skip is rendered whenever a speech is active AND either (a) the
+  // reveal is still running under normal motion, or (b) reduced motion
+  // is on. Under reduced motion the reveal completes instantly, so
+  // criterion 22 requires the Skip button to remain rendered and
+  // operable for the duration of the active speech (a safe no-op once
+  // the reveal has completed).
+  const showSkip = active !== null && (reduceMotion || !revealComplete)
 
   const historyApi = useMemo(
     () => ({
@@ -143,15 +165,9 @@ export function App() {
         <header className="app-header">
           <h1 className="app-title">Dictator Speech Generator</h1>
         </header>
-        <main className="app-main">
-          <Portrait />
-          <Teleprompter
-            text={text}
-            generationId={generationId}
-            reduceMotion={reduceMotion}
-            onComplete={handleComplete}
-          />
-        </main>
+        {/* Controls precede <main> in DOM so the keyboard tab order runs
+            mood → length → generate → skip (inside main) → copy → favourite.
+            CSS `order` restores the visual placement (main above controls). */}
         <Controls
           mood={state.lastMood}
           length={state.lastLength}
@@ -160,6 +176,29 @@ export function App() {
           onLengthChange={setLength}
           onGenerate={handleGenerate}
         />
+        <main className="app-main">
+          <Portrait />
+          <div className="teleprompter-frame">
+            <Teleprompter
+              text={text}
+              generationId={generationId}
+              reduceMotion={reduceMotion}
+              skipSignal={skipSignal}
+              onComplete={handleComplete}
+            />
+            {showSkip && (
+              <button
+                type="button"
+                className={
+                  reduceMotion ? 'skip-button skip-button--instant' : 'skip-button'
+                }
+                onClick={handleSkip}
+              >
+                {SKIP_LABEL}
+              </button>
+            )}
+          </div>
+        </main>
         <div className="actions-row">
           <button
             type="button"
