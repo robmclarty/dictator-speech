@@ -5,7 +5,10 @@
     "src/main.{ts,tsx,js,jsx}",
     "src/theme/motion.ts",
     "src/theme/icons.tsx",
-    "src/app/copy.ts"
+    "src/app/copy.ts",
+    "src/generator/compose.ts",
+    "src/generator/picker.ts",
+    "src/data/chunks.schema.ts"
   ],
   "rules": {
     "unused-dependencies": "warn"
@@ -21,6 +24,18 @@
     },
     {
       "file": "src/app/copy.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/generator/compose.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/generator/picker.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/data/chunks.schema.ts",
       "exports": ["*"]
     }
   ]

@@ -5,7 +5,10 @@
     "src/main.tsx",
     "src/theme/motion.ts",
     "src/theme/icons.tsx",
-    "src/app/copy.ts"
+    "src/app/copy.ts",
+    "src/generator/compose.ts",
+    "src/generator/picker.ts",
+    "src/data/chunks.schema.ts"
   ],
   "project": ["src/**/*.{ts,tsx}", "test/**/*.ts"],
   "ignoreBinaries": [],
