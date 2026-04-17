@@ -13,11 +13,17 @@ export const TOAST_MS = 6000 as const
 /**
  * Named exceptions to the universal 120ms transition. These are the ONLY
  * non-120ms durations permitted anywhere in the app.
+ *
+ * `cursorBlinkMs` is the square-wave period for the gold block cursor
+ * during reveal (1Hz → 1000ms). Surfaced as a CSS var so the keyframe
+ * animation does not embed a literal duration (the off-cadence rule
+ * forbids any literal duration other than 120ms/0ms in CSS).
  */
 export const MOTION_EXCEPTIONS = {
   toastSlideMs: 200,
   skipFadeInMs: 200,
   cursorFadeOutMs: 800,
+  cursorBlinkMs: 1000,
 } as const
 
 /**
@@ -31,6 +37,7 @@ export const MOTION_CSS_VARS: Readonly<Record<string, string>> = {
   '--motion-toast-slide-ms': `${MOTION_EXCEPTIONS.toastSlideMs}ms`,
   '--motion-skip-fade-in-ms': `${MOTION_EXCEPTIONS.skipFadeInMs}ms`,
   '--motion-cursor-fade-out-ms': `${MOTION_EXCEPTIONS.cursorFadeOutMs}ms`,
+  '--motion-cursor-blink-ms': `${MOTION_EXCEPTIONS.cursorBlinkMs}ms`,
 }
 
 /**

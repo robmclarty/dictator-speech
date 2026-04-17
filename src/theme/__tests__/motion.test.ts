@@ -24,6 +24,7 @@ describe('motion constants', () => {
     expect(MOTION_EXCEPTIONS.toastSlideMs).toBe(200)
     expect(MOTION_EXCEPTIONS.skipFadeInMs).toBe(200)
     expect(MOTION_EXCEPTIONS.cursorFadeOutMs).toBe(800)
+    expect(MOTION_EXCEPTIONS.cursorBlinkMs).toBe(1000)
   })
 
   it('publishes every constant as a CSS custom property', () => {
@@ -34,6 +35,9 @@ describe('motion constants', () => {
     expect(MOTION_CSS_VARS['--motion-skip-fade-in-ms']).toBe(`${MOTION_EXCEPTIONS.skipFadeInMs}ms`)
     expect(MOTION_CSS_VARS['--motion-cursor-fade-out-ms']).toBe(
       `${MOTION_EXCEPTIONS.cursorFadeOutMs}ms`,
+    )
+    expect(MOTION_CSS_VARS['--motion-cursor-blink-ms']).toBe(
+      `${MOTION_EXCEPTIONS.cursorBlinkMs}ms`,
     )
   })
 })

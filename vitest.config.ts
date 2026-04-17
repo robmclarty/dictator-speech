@@ -18,6 +18,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'integration',
+          environment: 'jsdom',
           include: ['test/integration/**/*.test.ts'],
         },
       },

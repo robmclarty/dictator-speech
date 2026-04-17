@@ -8,7 +8,9 @@
     "src/app/copy.ts",
     "src/generator/compose.ts",
     "src/generator/picker.ts",
-    "src/data/chunks.schema.ts"
+    "src/data/chunks.schema.ts",
+    "src/storage/use-local-storage.ts",
+    "src/storage/game-state.ts"
   ],
   "rules": {
     "unused-dependencies": "warn"
@@ -36,6 +38,14 @@
     },
     {
       "file": "src/data/chunks.schema.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/storage/use-local-storage.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/storage/game-state.ts",
       "exports": ["*"]
     }
   ]

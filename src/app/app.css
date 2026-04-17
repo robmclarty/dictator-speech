@@ -25,6 +25,19 @@ body,
   line-height: var(--line-height-body);
 }
 
+/* Visually-hidden utility for the aria-live mirror region. Keeps the
+   text in the accessibility tree without rendering it visually. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Universal focus ring — coral 3px outline at 2px offset, with a 1px ink
    hairline backstop on the outer edge. The hairline carries the WCAG 1.4.11
    contrast (coral alone is below 3:1 against gold/palm/parchment); the
@@ -96,10 +109,12 @@ body,
 }
 
 .teleprompter {
+  position: relative;
   flex: 1 1 67%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
   background: var(--color-parchment);
   border: 2px solid var(--color-gold);
   border-radius: 0;
@@ -118,6 +133,68 @@ body,
   line-height: var(--line-height-teleprompter);
   color: var(--color-ink-faded);
   text-align: center;
+  align-self: center;
+  margin: auto;
+}
+
+.teleprompter-surface {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 480px;
+}
+
+.teleprompter-body {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--font-size-teleprompter);
+  line-height: var(--line-height-teleprompter);
+  color: var(--color-ink);
+  white-space: pre-wrap;
+}
+
+.teleprompter-cursor-anchor {
+  display: inline;
+}
+
+.teleprompter-cursor {
+  display: inline-block;
+  color: var(--color-gold);
+  animation: teleprompter-cursor-blink var(--motion-cursor-blink-ms) steps(2, jump-none) infinite;
+}
+
+.teleprompter-cursor--static {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes teleprompter-cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.skip-button {
+  position: absolute;
+  right: var(--space-2);
+  bottom: var(--space-2);
+  background: transparent;
+  border: 0;
+  padding: var(--space-1);
+  color: var(--color-palm);
+  font-family: var(--font-ui);
+  font-size: var(--font-size-control);
+  cursor: pointer;
+  animation: skip-fade-in var(--motion-skip-fade-in-ms) ease-out both;
+}
+
+.skip-button--instant {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes skip-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .controls {
@@ -140,6 +217,11 @@ body,
   color: var(--color-ink);
 }
 
+.control-readout {
+  font-size: var(--font-size-control);
+  color: var(--color-ink);
+}
+
 .control-select,
 .control-slider {
   font-family: var(--font-ui);
@@ -157,10 +239,45 @@ body,
   border-color: var(--color-gold);
 }
 
+.control-select:disabled,
+.control-slider:disabled,
+.primary-button:disabled {
+  opacity: 0.5;
+}
+
 .control-slider {
   width: 200px;
   padding: 0;
   height: 24px;
+}
+
+.control-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--color-gold);
+  border-radius: 50%;
+  border: 0;
+  transition: transform 120ms ease-out;
+}
+
+.control-slider:hover::-webkit-slider-thumb,
+.control-slider:active::-webkit-slider-thumb {
+  transform: scale(1.1);
+}
+
+.control-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--color-gold);
+  border-radius: 50%;
+  border: 0;
+  transition: transform 120ms ease-out;
+}
+
+.control-slider:hover::-moz-range-thumb,
+.control-slider:active::-moz-range-thumb {
+  transform: scale(1.1);
 }
 
 .primary-button {
@@ -188,14 +305,140 @@ body,
 }
 
 .primary-button:disabled {
-  opacity: 0.5;
   cursor: not-allowed;
   box-shadow: none;
+}
+
+.actions-row {
+  display: flex;
+  gap: var(--layout-control-row-gap);
+  align-items: center;
+}
+
+.copy-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-icon-gap);
+  font-family: var(--font-ui);
+  font-size: var(--font-size-control);
+  color: var(--color-ink);
+  background: var(--color-mint);
+  border: 1px solid var(--color-palm);
+  border-radius: 4px;
+  padding: var(--space-1) var(--space-2);
+  cursor: pointer;
+  transition: border-color 120ms ease-out;
+}
+
+.copy-button:hover {
+  border-color: var(--color-gold);
+}
+
+.copy-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.history-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--font-size-section-header);
+  line-height: var(--line-height-section-header);
+  color: var(--color-ink);
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.history-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  background: var(--color-mint);
+  border: 1px solid var(--color-palm);
+  border-radius: 4px;
+}
+
+.history-replay {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  background: transparent;
+  border: 0;
+  padding: var(--space-1);
+  font-family: var(--font-ui);
+  font-size: var(--font-size-control);
+  color: var(--color-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.history-meta {
+  font-size: var(--font-size-control);
+  color: var(--color-ink);
+}
+
+.history-action {
+  font-size: var(--font-size-control);
+  color: var(--color-palm);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.history-favourite {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-icon-gap);
+  background: transparent;
+  border: 1px solid var(--color-palm);
+  border-radius: 4px;
+  padding: var(--space-1);
+  font-family: var(--font-ui);
+  font-size: var(--font-size-control);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: border-color 120ms ease-out;
+}
+
+.history-favourite:hover {
+  border-color: var(--color-gold);
+}
+
+.history-favourite-label {
+  font-size: var(--font-size-control);
 }
 
 .footer {
   margin-top: var(--space-4);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.footer-counter {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--font-size-control);
+  color: var(--color-palm);
 }
 
 .footer-disclaimer {
@@ -204,6 +447,46 @@ body,
   font-size: var(--font-size-footer);
   font-style: italic;
   color: var(--color-ink);
+}
+
+/* Toast — bottom-center parchment slip. The slide is a named motion
+   exception (toastSlideMs) routed through --motion-toast-slide-ms; the
+   reduced-motion variant collapses the slide to a fade only. */
+.toast-region {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 50;
+}
+
+.toast {
+  display: block;
+  width: 320px;
+  padding: var(--space-2);
+  background: var(--color-parchment);
+  color: var(--color-ink);
+  border: 2px solid var(--color-gold);
+  border-radius: 0;
+  font-family: var(--font-ui);
+  font-size: var(--font-size-control);
+  text-align: center;
+  cursor: pointer;
+  animation: toast-slide-in var(--motion-toast-slide-ms) ease-out both;
+}
+
+.toast--reduced-motion {
+  animation: toast-fade-in var(--motion-toast-slide-ms) ease-out both;
+}
+
+@keyframes toast-slide-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toast-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Error boundary fallback */
@@ -275,5 +558,8 @@ body,
   }
   .control-slider {
     width: 100%;
+  }
+  .toast {
+    width: 280px;
   }
 }

@@ -42,7 +42,14 @@ describe('Footer', () => {
 
 describe('Teleprompter (idle state)', () => {
   it('exposes a labelled section with the idle prompt copy', () => {
-    const html = renderToStaticMarkup(createElement(Teleprompter))
+    const html = renderToStaticMarkup(
+      createElement(Teleprompter, {
+        text: '',
+        generationId: 0,
+        reduceMotion: true,
+        onComplete: () => {},
+      }),
+    )
     expect(html).toContain('aria-label="Teleprompter"')
     expect(htmlIncludes(html, IDLE_PROMPT)).toBe(true)
   })
