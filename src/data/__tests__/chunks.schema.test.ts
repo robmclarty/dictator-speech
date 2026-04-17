@@ -12,7 +12,7 @@ describe('parseChunksCorpus', () => {
     const parsed = parseChunksCorpus(rawCorpus)
     expect(Array.isArray(parsed)).toBe(true)
     expect(parsed.length).toBeGreaterThan(0)
-    const rawIds = (rawCorpus as ReadonlyArray<{ readonly id: string }>).map((c) => c.id)
+    const rawIds = rawCorpus.map((c) => c.id)
     expect(parsed.map((c) => c.id)).toEqual(rawIds)
   })
 

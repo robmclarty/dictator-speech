@@ -50,13 +50,27 @@ describe('WCAG AA contrast on the named pairs', () => {
     expect(contrastRatio('ink', 'gold')).toBeGreaterThanOrEqual(4.5)
   })
 
-  it('focus ring backstop (ink hairline) passes 3:1 against gold, palm, and parchment', () => {
+  it('focus ring backstop (ink hairline) passes 3:1 against every background it appears on', () => {
     // The coral component of the compound focus ring does not meet 3:1
     // against gold/palm/parchment on its own (the math is published by
     // WCAG and the palette is fixed). The 1px ink hairline shipped on the
     // outer edge of the focus ring carries the SC 1.4.11 contrast.
+    // Phase 4 (criterion 10) extends this to every background the ring
+    // can land on: gold (primary button), palm (no — skip button text is
+    // palm-on-parchment so the ring renders against parchment), parchment
+    // (teleprompter/toast/error-card), banana (page tint), mint
+    // (control surfaces), and palm itself (listed for completeness).
     expect(contrastRatio('ink', 'gold')).toBeGreaterThanOrEqual(3)
     expect(contrastRatio('ink', 'palm')).toBeGreaterThanOrEqual(3)
     expect(contrastRatio('ink', 'parchment')).toBeGreaterThanOrEqual(3)
+    expect(contrastRatio('ink', 'banana')).toBeGreaterThanOrEqual(3)
+    expect(contrastRatio('ink', 'mint')).toBeGreaterThanOrEqual(3)
+  })
+
+  it('ink on mint passes 4.5:1 (control-field text over mint surface)', () => {
+    // Mint is the dropdown/slider/copy-button/history surface. The
+    // control labels and copy-button text read against mint at 14px;
+    // WCAG AA requires 4.5:1 for normal text.
+    expect(contrastRatio('ink', 'mint')).toBeGreaterThanOrEqual(4.5)
   })
 })
