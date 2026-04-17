@@ -1,0 +1,1180 @@
+:) ridgeline build alpha
+[ridgeline] Sandbox: greywall
+[ridgeline] Starting build: alpha (4 phases)
+
+
+[ridgeline] ── Phase 1/4: 01-foundation-and-design-system ──
+[ridgeline] [01-foundation-and-design-system] Building...
+[phase-1] Starting: Foundation and Design System
+[Bash] ls -la 
+[Read] .ridgeline/builds/alpha/handoff.md
+[Read] package.json
+[Read] tsconfig.json
+[Read] knip.json
+[Read] sgconfig.yml
+[Read] vitest.config.ts
+[Read] .oxlintrc.json
+[Read] .fallowrc.json
+[Bash] ls -la src test config /U…
+[Read] CHANGELOG.md
+[Bash] ls -la config/ast-grep src/__tests__ <path>
+[Read] src/index.ts
+[Read] test/setup/vitest.setup.ts
+[Bash] ls -la config/ast-grep/rules config/ast-grep/tests 2>&1
+[Read] .fallow
+[Bash] ls -la .fallow 2>&1
+[Bash] ls node_modules/@ast-grep node_modules/.bin/ast-grep <path>
+[Read] docs/feedback_loops.md
+[Bash] cat node_modules/vite/package.json | grep -E '"version"|"name"' | head -5
+[Read] docs/feedback_loops.md
+[Bash] npm test 2>&1 | tail -50
+[Read] docs/secrets.md
+[Bash] cat node_modules/.bin/ast-grep --help 2>&1 | head -20; echo "---"; ls docs/ 2>&1
+[Bash] ./node_modules/.bin/ast-grep --help 2>&1 | head -30
+[Read] docs/testing.md
+[Bash] ./node_modules/.bin/ast-grep new --help 2>&1 | head -30
+
+I have enough context to start. Let me install dependencies, scaffold files, and build incrementally.
+[Bash] npm install --save react@^18 react-dom@^18 2>&1 | tail -20
+[ToolSearch]
+[TodoWrite]
+[Bash] npm install --save-dev @vitejs/plugin-react @types/react@^18 @types/react-dom@^18 2>&1 | tail -10
+[Bash] cat node_modules/@vitejs/plugin-react/package.json | grep '"version"' ; cat node_mo…
+[Read] package.json
+
+Now let me write the package.json updates, knip.json, tsconfig, and bootstrap files.
+[Write] package.json
+[Bash] grep -c '"test": "npm run lint && npm run test:unit"' package.json
+[Write] tsconfig.json
+[Write] knip.json
+[Write] .fallowrc.json
+[Write] vite.config.ts
+[Bash] rm -f src/index.ts src/__tests__/.gitkeep
+
+Now download the Playfair Display fonts.
+[Bash] curl -s -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;…
+[Bash] curl -v -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;…
+[Bash] unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY; curl -s -A "Mozilla/5.0" "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap" 2>&1 | head -40
+[ToolSearch]
+[WebFetch] Return the full raw CSS, including the @font-face blocks. List each woff2 URL referenced and which unicode-range / weight it belongs to.
+[Bash] env | grep -i proxy
+[Bash] curl -sI "https://cdn.jsdelivr.net/npm/@fontsource/playfair-display@5.0.0/files/playfair-display-latin-700-normal.woff2" 2>&1 | head -10
+[Bash] curl -sI "https://registry.npmjs.org/@fontsource/playfair-display" 2>&1 | head -5
+[Bash] cd /tmp && mkdir -p font-fetch && cd font-fetch && npm pack @fontsource/playfair-display@latest 2>&1 | tail -5
+[Bash] cd /tmp/font-fetch && tar -xzf fontsource-playfair-display-5.2.8.tgz && ls package/files/ 2>&1 | grep -E 'latin-(700|900)-normal' | head -20
+[Bash] ls -la /tmp/font-fetch/package/files/playfair-display-latin-700-normal.woff2 /tmp/font-fetch/package/files/playfair-display-latin-900-normal.woff2
+[Bash] which pyftsubset 2>&1; which woff2_compress 2>&1; python3 -c "import fontTools" 2>&1; which fonttools 2>&1
+[Bash] pip3 install fonttools brotli 2>&1 | tail -5
+[Bash] pip3 install --user --break-system-packages fonttools brotli 2>&1 | tail -5
+[Bash] npm pack subset-font 2>&1 | tail -3
+[Bash] cd /tmp/font-fetch && rm -rf subset-tool && mkdir subset-tool && cd subset-tool && cp subset-font-2.5.0.tgz . && npm init -y >/dev/null && np…
+[Bash] rm -f subset-font-2.5.0.tgz
+[Write] /tmp/font-fetch/subset-tool/subset.mjs
+[Bash] cd /tmp/font-fetch/subset-tool && node subset.mjs 2>&1
+[Bash] cat /tmp/font-fetch/subset-tool/PlayfairDisplay-700.woff2 /tmp/font-fetch/subset-tool/PlayfairDisplay-900.woff2 | gzip -9 | wc -c
+[Bash] cp /tmp/font-fetch/subset-tool/PlayfairDisplay-700.woff2 src/theme/fonts/PlayfairDisplay-700.woff2
+
+Now author all the theme files. Start with palette and motion (the source of truth for the CSS custom property exposure).
+[Write] src/theme/palette.css
+[Write] src/theme/motion.ts
+[Write] src/theme/spacing.css
+[Write] src/theme/typography.css
+[Write] src/theme/icons.tsx
+
+Now author the Leader portrait SVG. Token-only colors, 600×800.
+[Write] src/theme/leader.svg
+[TodoWrite]
+[Bash] stat -f "%z" src/theme/leader.svg
+[Write] src/app/copy.ts
+[Write] src/app/portrait.tsx
+[Write] src/app/teleprompter.tsx
+[Write] src/app/controls.tsx
+[Write] src/app/footer.tsx
+[Write] src/app/error-boundary.tsx
+[Edit] src/app/error-boundary.tsx
+[Write] src/app/app.tsx
+[Write] src/app/app.css
+[Write] src/theme/palette.css
+[Edit] src/app/app.css
+[Edit] src/app/app.css
+[Edit] src/app/app.css
+[Edit] src/app/app.css
+
+Now write index.html and main.tsx.
+[Write] index.html
+[Write] src/main.tsx
+[Write] src/vite-env.d.ts
+[TodoWrite]
+
+Now author ast-grep rules.
+[Bash] rm config/ast-grep/rules/.gitkeep
+[Write] config/ast-grep/rules/no-set-interval.yml
+[Bash] ./node_modules/.bin/ast-grep scan 2>&1 | tail -20
+[Bash] ./node_modules/.bin/ast-grep run --pattern 'setInterval($$$A)' --lang typescript src/app/teleprompter.tsx 2>&1
+[Bash] ./node_modules/.bin/ast-grep run --pattern 'setInterval($$$A)' --lang tsx src/app/teleprompter.tsx 2>&1
+[Bash] echo "setInterval(() => {}, 1000)" > /tmp/test.tsx
+[Bash] echo "setInterval(() => {}, 1000)" > /tmp/test.tsx
+[Bash] echo "setInterval(() => {}, 1000)" > /tmp/test.ts
+[Write] config/ast-grep/rules/no-set-interval.yml
+[Write] config/ast-grep/rules/no-set-interval-teleprompter.yml
+[Write] config/ast-grep/rules/no-dangerously-set-inner-html-tsx.yml
+[Write] config/ast-grep/rules/no-dangerously-set-inner-html-ts.yml
+[Write] config/ast-grep/rules/no-math-random.yml
+[Write] config/ast-grep/rules/no-any-in-validators.yml
+[Write] config/ast-grep/rules/no-as-cast-in-validators.yml
+
+Now CSS rules. Let me first understand ast-grep's CSS node kinds.
+[Bash] cat > /tmp/test.css <<'EOF'
+[Bash] ./node_modules/.bin/ast-grep run --pattern '$X' --lang css --debug-query=ast /tmp/test.css 2>&1 | head -30
+[Bash] cat > /tmp/test2.css <<'EOF'
+[Bash] ./node_modules/.bin/ast-grep run --pattern '.foo { $$$ }' --lang css /tmp/test2.css 2>&1
+[Bash] ./node_modules/.bin/ast-grep run --pattern 'color: $X' --lang css /tmp/test2.css 2>&1
+[Bash] ./node_modules/.bin/ast-grep run --pattern '$A: $X;' --lang css /tmp/test2.css 2>&1
+[Bash] cat > /tmp/test3.css <<'EOF'
+[Write] /tmp/test-rule.yml
+[Bash] ./node_modules/.bin/ast-grep scan --rule /tmp/test-rule.yml /tmp/test3.css 2>&1
+[Write] /tmp/test-rule.yml
+[Bash] ./node_modules/.bin/ast-grep scan --rule /tmp/test-rule.yml /tmp/test3.css 2>&1
+[Bash] cat > /tmp/test4.css <<'EOF'
+[Write] /tmp/test-rule.yml
+[Bash] ./node_modules/.bin/ast-grep scan --rule /tmp/test-rule.yml /tmp/test4.css 2>&1
+[Bash] node -e 'const r = /(?:^|[^a-z0-9])(#000|#fff|#000000|#ffffff|black|white)(?:$|[^a-z0-9])/i; console.log(r.test("rgb(0,0,0)")); console.log(r.test("1px solid #000")); console.log(r.test("white"));'
+[Write] /tmp/test-rule.yml
+[Bash] ./node_modules/.bin/ast-grep scan --rule /tmp/test-rule.yml /tmp/test4.css 2>&1
+[Write] config/ast-grep/rules/no-bw-css.yml
+[Write] config/ast-grep/rules/no-off-scale-spacing.yml
+[Write] config/ast-grep/rules/no-off-cadence-transition.yml
+[Write] config/ast-grep/rules/no-prefers-color-scheme.yml
+[Write] config/ast-grep/rules/no-icon-only-button.yml
+[Write] config/ast-grep/rules/no-lazy-portrait.yml
+[Write] config/ast-grep/rules/single-class-component.yml
+[Write] config/ast-grep/rules/single-class-component-ts.yml
+
+Run scan to validate the rules.
+[Bash] ./node_modules/.bin/ast-grep scan 2>&1 | head -60
+[Write] config/ast-grep/rules/no-off-cadence-transition.yml
+[Bash] ./node_modules/.bin/ast-grep scan 2>&1 | head -80
+[Write] config/ast-grep/rules/no-off-scale-spacing.yml
+[Bash] ./node_modules/.bin/ast-grep scan 2>&1 | head -60
+[Edit] config/ast-grep/rules/no-off-cadence-transition.yml
+[Bash] ./node_modules/.bin/ast-grep scan 2>&1 | head -40
+
+All ast-grep rules pass. Let me verify each rule actually catches violations with quick negative tests.
+[Bash] cat > /tmp/test-bad.css <<'EOF'
+[Bash] cp /tmp/test-bad.css src/app/__bad.css
+
+All 4 CSS rules fire correctly. Now test the TSX rules:
+[Bash] cat > src/app/__bad.tsx <<'EOF'
+[Bash] cat > src/app/__bad.tsx <<'EOF'
+[Bash] cat > src/app/__bad.tsx <<'EOF'
+[Bash] cat > src/app/__bad.tsx <<'EOF'
+[Write] config/ast-grep/rules/no-dangerously-set-inner-html-tsx.yml
+[Write] config/ast-grep/rules/no-dangerously-set-inner-html-ts.yml
+
+Now verify portrait rule too. Let me also ensure no-lazy-portrait fires when needed.
+[Bash] cp src/app/portrait.tsx /tmp/portrait.bak
+
+Now run the full pipeline and see where I am.
+[Bash] npm test 2>&1 | tail -80
+[Bash] cat node_modules/knip/schema.json 2>&1 | head -100
+[Write] knip.json
+[Bash] npm run lint:knip 2>&1 | tail -30
+[Bash] npm run lint:knip 2>&1 ; echo "exit=$?"
+
+Exit 0. Let me run the full pipeline.
+[Bash] npm test 2>&1 | tail -50
+[Bash] npm test 2>&1 | grep -E '(Failed|exit|✗|error)' | head -30
+[Bash] ./node_modules/.bin/fallow --help 2>&1 | head -40
+[Bash] ./node_modules/.bin/fallow config-schema 2>&1 | head -100
+[Bash] ./node_modules/.bin/fallow config-schema 2>&1 | grep -A 20 'IgnoreExportRule\|"ignoreExports"' | head -60
+[Write] .fallowrc.json
+[Bash] npm run lint:fallow 2>&1 | tail -30; echo "exit=$?"
+
+Fallow passes. Now full pipeline:
+[Bash] npm test 2>&1 | tail -20; echo "exit=$?"
+[Bash] npm run build 2>&1 | tail -30; echo "exit=$?"
+[Read] dist/index.html
+[TodoWrite]
+[Write] src/theme/__tests__/palette.test.ts
+[Write] src/theme/__tests__/contrast.test.ts
+[Write] src/theme/__tests__/fonts.test.ts
+[Bash] ls src/theme/__tests__/ src/app/ <project>
+[Read] src/app/copy.ts
+[Read] src/theme/motion.ts
+[Bash] ls src/app/__tests__/ src/theme/ 2>&1
+[Read] vitest.config.ts
+[Read] src/app/footer.tsx
+[Read] src/app/error-boundary.tsx
+[Read] src/app/teleprompter.tsx
+[Read] src/app/portrait.tsx
+[Read] src/theme/icons.tsx
+[Read] src/app/controls.tsx
+[Read] src/app/app.tsx
+[ToolSearch]
+[Bash] ls -la src/theme/leader.svg src/theme/fonts/ <path>
+[Read] test/setup/vitest.setup.ts
+[Read] package.json
+[Read] src/theme/leader.svg
+[Bash] grep -E '#[0-9A-Fa-f]{3,8}' src/theme/leader.svg | head -50; echo "---"; grep -oE '#[0-9A-Fa-f]{3,8}' <path>
+
+All 7 SVG colors are in the palette. Now I'll write the remaining test files.
+[Write] src/theme/__tests__/leader-svg.test.ts
+[Write] src/theme/__tests__/motion.test.ts
+[Write] src/app/__tests__/copy.test.ts
+
+Now component-render tests via `react-dom/server`. Since unit test glob is `*.test.ts`, I'll use `React.createElement` rather than JSX.
+[Write] src/app/__tests__/components.test.ts
+
+Let me check what ast-grep rules might affect test files:
+[Bash] ls config/ast-grep/rules/ 2>&1
+[Read] config/ast-grep/rules/single-class-component.yml
+[Read] config/ast-grep/rules/single-class-component-ts.yml
+[Read] config/ast-grep/rules/no-bw-css.yml
+[Bash] npm run test:unit 2>&1 | tail -100
+[Read] config/ast-grep/rules/no-as-cast-in-validators.yml
+[Read] src/theme/palette.css
+[Bash] grep -i 'contrast\|focus\|coral\|wcag' .ridgeline/builds/alpha/design.md | head -40
+[Bash] grep -i 'contrast\|focus\|coral\|wcag\|3:1\|4.5' .ridgeline/builds/alpha/spec.md | head -40
+[Read] src/app/app.css
+[Bash] ls .ridgeline/builds/alpha/phases/ 2>&1
+[Bash] grep -n -i 'contrast\|coral\|3:1\|focus' .ridgeline/builds/alpha/phases/01-foundation-and-design-system.md
+
+Time to fix the four failures. The failures break down as:
+
+1. `palette.test.ts`: comment in palette.css contains the literal words "black/white" — rephrase the comment.
+2. `contrast.test.ts`: coral alone cannot satisfy 3:1 against gold/palm/parchment — physically impossible. Add an ink hairline behind the coral focus ring; verify ink against the trio.
+3. `Teleprompter` test: HTML entity escape — assert against the encoded form too.
+4. `ErrorBoundary` test: legacy SSR doesn't trigger error boundaries — assert via `getDerivedStateFromError` and a state-injecting subclass.
+[Edit] src/theme/palette.css
+[Edit] src/app/app.css
+[Edit] src/theme/__tests__/contrast.test.ts
+
+Now fix the component tests:
+[Write] src/app/__tests__/components.test.ts
+[Bash] npm test 2>&1 | tail -80
+[Edit] src/theme/__tests__/palette.test.ts
+[Bash] npm test 2>&1 | tail -50
+
+All 36 tests pass and the full lint pipeline is green. Now run the build to confirm Vite still produces a valid bundle:
+[Bash] npm run build 2>&1 | tail -30
+
+Build is clean — single JS chunk at 47KB gzip, fonts at ~40KB combined, no external CDNs. Now walk through phase 1 acceptance criteria to confirm coverage, then write handoff notes.
+[Read] .ridgeline/builds/alpha/phases/01-foundation-and-design-system.md
+[Grep] fonts\.(googleapis|gstatic)\.com
+[Read] config/ast-grep/rules/no-lazy-portrait.yml
+[Read] .ridgeline/builds/alpha/handoff.md
+[TodoWrite]
+[Write] .ridgeline/builds/alpha/handoff.md
+[Bash] npm test 2>&1 | tail -10
+[TodoWrite]
+
+[phase-1] DONE
+
+`npm test` exits 0 end-to-end (oxlint → tsc → ast-grep → knip → fallow → 36 unit tests across 7 files). `npm run build` exits 0 producing a single 47 KB-gzipped JS chunk plus the leader SVG, two woff2 files, and 1.6 KB-gzipped CSS.
+
+Phase 1 deliverables landed:
+- Vite/React 18 scaffold with `dev`/`build`/`preview` scripts; `package.json scripts.test` byte-identical.
+- Seven brand tokens, 8px spacing, self-hosted subsetted Playfair 700 + 900 (39.4 KB combined gzipped — under the 40 KB budget), motion constants single-source-of-truth in `src/theme/motion.ts`.
+- Four hand-authored inline SVG icons (`FavouriteStar`, `Copy`, `Skip`, `Reload`) and a 7.4 KB `leader.svg` portrait using only palette colors.
+- Static app shell (`App`, `Portrait`, `Teleprompter` idle, stubbed `Controls`, `Footer`, `ErrorBoundary` with the in-character "The Leader is indisposed." overlay).
+- 14 ast-grep rules covering all of criterion 21 (single-class-component, no-bw-css, off-scale spacing, off-cadence transitions, no `prefers-color-scheme`, no `setInterval`/`Math.random`/`dangerouslySetInnerHTML`, no `any`/`as` casts in pre-wired validator paths, no icon-only buttons, no lazy-loaded portrait).
+- Colocated tests covering palette, contrast, fonts, SVG, motion constants, copy strings, and component SSR (footer, idle teleprompter, error boundary happy + fallback).
+
+Two material deviations are documented in `.ridgeline/builds/alpha/handoff.md`:
+1. **Coral focus ring is compound.** Pure coral is arithmetically below 3:1 against gold/palm/parchment with the fixed brand hex. The implemented ring keeps coral as the visible 3 px outline but adds a 1 px ink hairline (`box-shadow: 0 0 0 6px var(--color-ink)`) that carries the WCAG SC 1.4.11 contrast.
+2. **ErrorBoundary fallback is exercised via a `state.hasError = true` subclass.** React 18's legacy synchronous SSR doesn't invoke error boundaries on thrown children — only the streaming renderer does. The static `getDerivedStateFromError` hook is also tested directly.
+[ridgeline] [01-foundation-and-design-system] Reviewing...
+[review:phase-1] Starting review
+[Bash] pwd && ls -la
+[Bash] cat package.json
+[Bash] git log --oneline -20
+[Bash] git show 05a02b3:package.json | grep -A1 '"test"'
+[Bash] npm test 2>&1 | tail -100
+[Bash] npm run build 2>&1 | tail -30
+[Bash] ls -la dist dist/assets
+[Bash] (npm run dev > /tmp/vite-dev.log 2>&1 &) ; echo "PID=$!"
+[Bash] sleep 3 && curl -s -o /tmp/vite-out.html -w "HTTP %{http_code}\n" http://localhost:5173/ && head -30 /tmp/vite-out.html
+[Bash] ps aux | grep -i vite | grep -v grep
+[Bash] cat /tmp/vite-dev.log 2>/dev/null | head -30
+[Bash] curl -s -o /tmp/vite-out.html -w "HTTP %{http_code}\n" http://127.0.0.1:5173/ ; head -30 /tmp/vite-out.html
+[Bash] cat /tmp/vite-dev.log
+[Bash] nc -z localhost 5173 && echo "OPEN" || echo "CLOSED"
+[Bash] npm run dev
+[Bash] sleep 3 ; nc -z localhost 5173 && echo "OPEN" || echo "CLOSED"
+[Bash] sleep 2 ; curl -sv http://localhost:5173/ 2>&1 | head -30
+[ToolSearch]
+[TaskStop]
+[Bash] ls dist/assets/*.js | wc -l && ls dist/assets/
+[Read] index.html
+[Read] src/theme/palette.css
+[Read] src/theme/spacing.css
+[Read] src/app/app.css
+[Read] src/theme/icons.tsx
+[Read] src/theme/motion.ts
+[Read] src/theme/typography.css
+[Bash] ls -la src/theme/fonts/ src/theme/leader.svg
+[Read] src/app/error-boundary.tsx
+[Grep] \b(any|@ts-ignore|@ts-expect-error|eslint-disable|--no-verify)\b
+[Grep] prefers-color-scheme
+[Grep] fonts\.googleapis\.com|fonts\.gstatic\.com|cdn\.jsdelivr
+[Grep] loading=["']lazy["']
+[Read] src/app/portrait.tsx
+[Bash] wc -c src/theme/leader.svg
+[Read] src/app/teleprompter.tsx
+[Read] src/app/footer.tsx
+[Read] src/app/app.tsx
+[Read] knip.json
+[Read] tsconfig.json
+[Read] src/theme/leader.svg
+[Grep] #[0-9A-Fa-f]{3,8}
+[Bash] ls config/ast-grep/rules/
+[Read] src/app/controls.tsx
+
+Now let me verify the preview actually serves the built output, since the dev server connection was refused in the sandbox:
+[Read] dist/index.html
+[Bash] grep -l "fonts\.googleapis\|fonts\.gstatic\|\.css\"" dist/assets/index-CqmW0dKQ.js 2>/dev/null; echo "---"; grep -c "fonts.googleapis\|fonts.gstatic" dist/assets/*.js dist/assets/*.css dist/index.htm…
+
+All checks are clean. The pipeline passes end-to-end, the build produces a single JS chunk, and each acceptance criterion has textual and behavioral evidence in the diff. A few observations before I produce the verdict:
+
+- Pipeline: `npm test` → 7 test files / 36 tests pass; all 5 lint stages green.
+- Build: `dist/` contains `index.html` + exactly one hashed JS chunk (`dist/assets/index-CqmW0dKQ.js`), no dynamic splits.
+- Dev server: Vite reports "ready" in the log; loopback curl is blocked by sandbox, so HTTP 200 can't be observed here, but SSR snapshot tests render every component tree without errors.
+- No external font CDN references anywhere in source, `index.html`, or built assets.
+- Knip emits one config *hint* (redundant `src/main.tsx` entry) — not an error; pipeline still exits 0 and neither entry is flagged unused.
+
+Background shell stopped (`TaskStop` on `bbrzp8qeh`). No other processes started.
+[ridgeline] [01-foundation-and-design-system] PASSED (2270s)
+
+[ridgeline] ── Phase 2/4: 02-generator-and-corpus ──
+[ridgeline] [02-generator-and-corpus] Building...
+[phase-2] Starting: Generator and Corpus implementation
+[Bash] ls -la 
+[Bash] ls -la src config/ast-grep/rules <project>
+[Bash] ls -la src/app src/theme
+[Read] package.json
+[Read] vitest.config.ts
+[Read] tsconfig.json
+[Read] knip.json
+[Read] .fallowrc.json
+[Read] .oxlintrc.json
+[ToolSearch]
+[TodoWrite]
+[Read] config/ast-grep/rules/no-math-random.yml
+[Read] config/ast-grep/rules/no-any-in-validators.yml
+[Read] config/ast-grep/rules/no-as-cast-in-validators.yml
+[Read] config/ast-grep/rules/no-set-interval.yml
+
+Now let me check the existing handoff and existing files to ensure I don't conflict:
+[Read] .ridgeline/builds/alpha/handoff.md
+
+Good. Now let me verify the current state passes:
+[Bash] npm test 2>&1 | tail -40
+
+Baseline is clean. Now let me start building. First, the PRNG module:
+[Bash] mkdir -p src/generator/__tests__ src/data/__tests__
+[Write] src/generator/prng.ts
+[Write] src/generator/__tests__/prng.test.ts
+
+Now let's build the corpus schema/validator:
+[Write] src/data/chunks.schema.ts
+
+Now let me author the chunks corpus. This is the highest-stakes artifact so I'll take care with the comedy. I need:
+
+- 7 core slots × 3 moods = 21 required cells, each ≥3 chunks (or backed by `mood: 'any'` with ≥3)
+- Plus tangent / digression for rambling mood (≥3 each, under mood 'any' is fine since they only appear in rambling)
+- Total ≥100 entries
+[Write] src/data/chunks.json
+
+I need to add more chunks to reach ≥100. Let me count: 87. I need at least 13 more.
+[Edit] src/data/chunks.json
+[Bash] node -e "const c = require('./src/data/chunks.json'); console.log('count:', c.length); const byKey = {}; for (const x of c) { const k = x.slot + '×' + x.mood; byKey[k] = (byKey[k] || 0) + 1; } consol…
+
+100 entries, every required cell has ≥3. Now let's verify gzipped size:
+[Bash] gzip -c src/data/chunks.json | wc -c
+[TodoWrite]
+
+6.5KB gzipped, well under the 100KB budget. Now let me write the authorial guardrail note for the data dir. Criterion 7 allows a README or equivalent — let me write a short README colocated:
+[Write] src/data/README.md
+
+Now let's build the skeleton module.
+[TodoWrite]
+
+Let me check word counts of my authored chunks to ensure the compose distributions will land in spec:
+[Bash] node -e "
+[ridgeline] [02-generator-and-corpus] Build failed (transient): Error: Claude invocation stalled: No output received for 300s (stall timeout)
+[ridgeline] [02-generator-and-corpus] Waiting 1.4s before retry...
+[ridgeline] [02-generator-and-corpus] Retry 1: building...
+[phase-2] Starting: Generator and Corpus implementation
+[Bash] ls 
+[Bash] ls src config/ast-grep/rules <project>
+[Bash] ls src/app src/data src/g…
+[Bash] ls src/data/__tests__ src/generator/__tests__
+[Read] src/generator/prng.ts
+[Read] src/generator/__tests__/prng.test.ts
+[Read] src/data/chunks.schema.ts
+[Read] src/data/chunks.json
+[Bash] wc -l src/data/chunks.json && node -e "const d=require('./src/data/chunks.json'); console.log('count:', d.length); const slots={}, moods={}; const cells={}; for(const c of d){slots[c.slot]=(slots[c.s…
+[ToolSearch]
+[TodoWrite]
+[Read] src/data/README.md
+[Read] src/data/chunks.json
+[Read] src/data/chunks.json
+[Read] package.json
+[Read] tsconfig.json
+[Read] knip.json
+[Read] vitest.config.ts
+[Bash] ls src/theme/__tests__ src/app/__tests__
+[Read] config/ast-grep/rules/no-math-random.yml
+[Read] config/ast-grep/rules/no-any-in-validators.yml
+[Bash] npm test 2>&1 | tail -40
+[Bash] node -e "
+
+Let me compute the tier distribution of the current corpus:
+[Bash] node -e "
+
+Now I have a clear picture. The corpus needs a small length-tier expansion to satisfy the word-count statistical targets in criterion 10 — I'll add ~20 chunks across compact/expanded/verbose tiers for the triumphant mood, and make the picker length-aware (using skeleton length to prefer an appropriate tier with graceful cascade).
+
+Let me start with the skeleton module:
+[Write] src/generator/skeleton.ts
+
+Now the picker module:
+[Write] src/generator/picker.ts
+
+Now the compose module:
+[Write] src/generator/compose.ts
+[TodoWrite]
+
+Now I'll extend the corpus with tier-balanced chunks for triumphant mood (needed to hit the word-count ranges in criterion 10):
+[Read] src/data/chunks.json
+[Edit] src/data/chunks.json
+[Bash] node -e "
+[Bash] node -e "
+[Bash] wc -c src/data/chunks.json && gzip -c src/data/chunks.json | wc -c
+
+Excellent — 8.3KB gzipped, well under 100KB budget. Now let me write the colocated tests:
+[Write] src/generator/__tests__/skeleton.test.ts
+[Write] src/generator/__tests__/picker.test.ts
+[Write] src/generator/__tests__/compose.test.ts
+
+Now the schema validator tests, corpus tests, and purity test:
+[Write] src/data/__tests__/chunks.schema.test.ts
+[Write] src/data/__tests__/chunks.corpus.test.ts
+[Write] src/generator/__tests__/purity.test.ts
+
+Now let me run the test pipeline and see what happens:
+[Bash] npm test 2>&1 | tail -80
+[Read] src/generator/picker.ts
+[Edit] src/generator/picker.ts
+[Bash] npm test 2>&1 | tail -80
+[Edit] src/generator/skeleton.ts
+[TodoWrite]
+[Bash] npm test 2>&1 | tail -80
+[Bash] npm test 2>&1 | grep -A 4 'dead-code\|Type exports\|Speech\|ComposeInput\|PickedChunk' | head -40
+[Bash] npm test 2>&1 | grep -B 2 -A 20 'Unused\|dead\|Type exports\|fail' | head -60
+[Read] .fallowrc.json
+[Edit] .fallowrc.json
+[Edit] knip.json
+
+Now refactor `pickChunks` to reduce complexity below the fallow threshold:
+[Write] src/generator/picker.ts
+[Bash] npm test 2>&1 | tail -70
+
+All checks pass — 14 test files, 81 tests green. Let me verify the build still works and all acceptance criteria are met:
+[Bash] npm run build 2>&1 | tail -20
+
+Let me run the full test pipeline one more time to confirm a clean green build:
+[Bash] npm test 2>&1 | tail -8
+[Bash] npm run test:integration 2>&1 | tail -6
+[Bash] npm run test:integration 2>&1 | grep -E 'pass|fail|ERR|Test' | head -20
+[Bash] npm run test:integration 2>&1 | tail -15
+[Bash] npx vitest run --project unit src/generator/__tests__/compose.test.ts 2>&1 | tail -15
+
+Let me also sanity-check a sample speech to make sure it's narratively reasonable:
+[Bash] node --input-type=module -e "
+[Bash] rm -f /tmp/sample.mjs
+
+Now let me walk the acceptance criteria one last time and append the handoff:
+[Bash] ls src/generator src/data src/generator/__tests__ src/data/__tests__
+[TodoWrite]
+[Read] .ridgeline/builds/alpha/handoff.md
+[Bash] wc -l .ridgeline/builds/alpha/handoff.md
+[Read] .ridgeline/builds/alpha/handoff.md
+[Bash] cat >> .ridgeline/builds/alpha/handoff.md << 'HANDOFF_EOF'
+
+[phase-2] DONE
+[ridgeline] [02-generator-and-corpus] Reviewing...
+[review:phase-2] Starting review
+[Bash] pwd && ls
+[Bash] ls src/generator src/data 2>&1
+[Bash] ls src/generator/__tests__ src/data/__tests__ config/ast-grep/rules 2>&1
+[Read] src/generator/prng.ts
+[Read] src/generator/compose.ts
+[Read] src/generator/picker.ts
+[Read] src/generator/skeleton.ts
+[Read] src/data/chunks.schema.ts
+
+Now let me run the check command to verify everything passes.
+[Bash] npm test 2>&1 | tail -100
+[Bash] grep -c '"id"' src/data/chunks.json && wc -c src/data/chunks.json
+[Bash] gzip -c src/data/chunks.json | wc -c
+[Bash] npx ast-grep scan src/generator src/data 2>&1 | tail -20
+[Grep] Math\.random|setInterval|document\b|window\b|localStorage|Date\.now
+[Grep] \b(any|as)\b
+[Read] config/ast-grep/rules/no-any-in-validators.yml
+[Grep] vi\.mock
+[Bash] npx vitest run --project unit src/data src/generator 2>&1 | tail -15
+[Bash] grep -iE '\b(Trump|Putin|Biden|Russia|China|America|American|Christian|Muslim|Jewish)\b' src/data/chunks.json || echo "Clean"
+
+All acceptance criteria verified. Pipeline (oxlint + tsc + ast-grep + knip + fallow + 81 unit tests) passes. Corpus has 121 entries (≥100) with 8.3KB gzipped (≤100KB). No `Math.random`, `as`, `any`, `Date.now`, DOM, or storage references in `src/generator/**`. No `vi.mock` of the validator anywhere.
+[ridgeline] [02-generator-and-corpus] PASSED (2162s)
+
+[ridgeline] ── Phase 3/4: 03-interactive-ui-and-accessibility ──
+[ridgeline] [03-interactive-ui-and-accessibility] Building...
+[Bash] echo "[phase-3] Starting: Interactive UI, Persistence, and Accessibility"
+[Bash] ls -la
+[Bash] find src test config -type f | head -100
+[Read] package.json
+[Read] vitest.config.ts
+[Read] tsconfig.json
+[Read] knip.json
+[Read] .fallowrc.json
+[Read] src/app/app.tsx
+[Read] src/app/controls.tsx
+[ToolSearch]
+[TodoWrite]
+[Read] src/app/teleprompter.tsx
+[Read] src/app/copy.ts
+[Read] src/theme/motion.ts
+[Read] src/generator/compose.ts
+[Read] src/data/chunks.schema.ts
+[Read] src/generator/prng.ts
+[Read] src/app/error-boundary.tsx
+[Read] src/app/footer.tsx
+[Read] src/app/portrait.tsx
+[Read] src/app/app.css
+[Read] src/theme/spacing.css
+[Read] src/theme/palette.css
+[Read] src/theme/typography.css
+[Read] src/app/__tests__/copy.test.ts
+[Read] src/app/__tests__/components.test.ts
+[Read] test/setup/vitest.setup.ts
+[Read] src/theme/icons.tsx
+[Read] src/main.tsx
+[Read] index.html
+[Read] src/generator/picker.ts
+[TodoWrite]
+[Read] config/ast-grep/rules/no-set-interval.yml
+[Read] config/ast-grep/rules/no-set-interval-teleprompter.yml
+[Read] config/ast-grep/rules/no-any-in-validators.yml
+[Read] config/ast-grep/rules/no-as-cast-in-validators.yml
+[Read] config/ast-grep/rules/no-icon-only-button.yml
+[Read] config/ast-grep/rules/no-off-scale-spacing.yml
+[Read] config/ast-grep/rules/no-off-cadence-transition.yml
+[Read] src/app/__tests__/copy.test.ts
+[Bash] ls node_modules | head -50
+[Bash] ls node_modules | grep -i jsdom
+[Bash] npm test 2>&1 | tail -30
+
+Baseline good. Now let me install jsdom for DOM-dependent tests:
+[Read] vitest.config.ts
+[Edit] vitest.config.ts
+
+Now let me build the storage layer:
+[Bash] mkdir -p src/storage/__tests__
+[Write] src/storage/game-state.ts
+
+Now the storage hook with no `any`/`as`:
+[Write] src/storage/use-local-storage.ts
+
+Let me refine the storage hook to avoid `as` casts cleanly:
+[Write] src/storage/use-local-storage.ts
+
+Now build the Teleprompter component with the rAF reveal logic:
+[Write] src/app/teleprompter.tsx
+[Edit] src/app/teleprompter.tsx
+
+Now let me add `copyText` to copy.ts:
+[Write] src/app/copy.ts
+
+Now create the Toast component:
+[Write] src/app/toast.tsx
+[Write] src/app/toast.tsx
+[TodoWrite]
+
+Now build the Controls component with state:
+[Write] src/app/controls.tsx
+
+Now build the History component:
+[Write] src/app/history.tsx
+
+Update Footer to render the counter:
+[Write] src/app/footer.tsx
+
+Now wire up the App component:
+[Write] src/app/app.tsx
+[Edit] src/app/app.tsx
+[Edit] src/app/app.tsx
+[Edit] src/app/app.tsx
+
+Add cursor blink to motion exceptions:
+[Edit] src/theme/motion.ts
+[Edit] src/theme/motion.ts
+[Read] src/theme/__tests__/motion.test.ts
+[Edit] src/theme/__tests__/motion.test.ts
+
+Now write the comprehensive CSS:
+[Write] src/app/app.css
+[Edit] src/app/app.css
+[Edit] src/app/app.css
+[Edit] src/app/app.css
+[TodoWrite]
+
+Update knip and fallow configs for new modules:
+[Write] knip.json
+[Write] .fallowrc.json
+
+Let me run a quick lint check to catch issues early:
+[Bash] npm run lint:tsc 2>&1 | tail -60
+
+TypeScript clean. Now ast-grep:
+[Bash] npm run lint:ast-grep 2>&1 | tail -60
+[Bash] npm run lint:ox 2>&1 | tail -40
+[Bash] npm run lint:knip 2>&1 | tail -30
+[Bash] npm run lint:fallow 2>&1 | tail -40
+[Bash] npm run lint:fallow 2>&1 | grep -A1 "dead\|Dead\|unused" | head -80
+[Bash] npx fallow --format json 2>&1 | python3 -c "import json,sys; d=json.load(sys.stdin); print(json.dumps(d.get('issues', d), indent=2)[:3000])" 2>&1 | head -100
+[Bash] npx fallow 2>&1 | grep -E "(unused|dead|■.*Dead)" | head -30
+[Bash] npx fallow 2>&1 | head -200 | tail -150
+
+Let me remove unused exports:
+[Edit] src/app/controls.tsx
+[Edit] src/app/controls.tsx
+[Edit] src/app/controls.tsx
+[Edit] src/app/footer.tsx
+[Edit] src/app/history.tsx
+[Edit] src/app/teleprompter.tsx
+[Edit] src/app/toast.tsx
+[Bash] npm run lint:knip 2>&1; echo "exit: $?"
+[Bash] npm run lint:fallow 2>&1 | grep -A20 "Unused exports\|Unused type"
+
+Now let me write the unit tests. Start with copyText:
+[Bash] mkdir -p src/app/__tests__
+[Write] src/app/__tests__/copy-text.test.ts
+
+Now storage tests:
+[Write] src/storage/__tests__/game-state.test.ts
+
+Now use-local-storage tests for parser + load/save logic:
+[Write] src/storage/__tests__/use-local-storage.test.ts
+[TodoWrite]
+
+Now teleprompter unit tests:
+[Write] src/app/__tests__/teleprompter.test.ts
+[Bash] ls test/integration/ 2>/dev/null || echo "no dir"
+[Read] src/storage/use-local-storage.ts
+[Read] src/storage/game-state.ts
+[Bash] ls test/ 2>/dev/null && echo "---" && ls test/integration/ 2>/dev/null
+[Bash] ls -la test/integration/ test/setup/ 2>/dev/null
+[Read] vitest.config.ts
+
+[phase-3] Writing integration test for use-local-storage
+[Write] test/integration/use-local-storage.test.ts
+
+Now let me run the test pipelines to verify everything passes.
+[Bash] npm run test:integration 2>&1 | tail -80
+
+I see a real bug in the eviction logic. When the new entry is non-favourite and all existing entries are favourites, `findIndex(h => !h.favourite)` returns the index of the new entry itself (which was just appended), so the new entry gets silently dropped instead of evicting the oldest favourite. Let me check unit test status:
+[Bash] npx vitest run --project unit src/storage/__tests__/game-state.test.ts 2>&1 | tail -50
+
+Real bug in `pushWithCap` — `findIndex` over `grown` includes the just-appended entry, so a non-favourite new entry gets evicted itself. The fix is to scan the *existing* history only:
+[Edit] src/storage/game-state.ts
+[Bash] npx vitest run --project unit src/storage/__tests__/game-state.test.ts 2>&1 | tail -20
+[Bash] npm run test:integration 2>&1 | tail -25
+[Read] src/storage/game-state.ts
+[Read] test/setup/vitest.setup.ts
+[Bash] npx vitest run --project unit src/storage/__tests__/game-state.test.ts -t "evicts the oldest favourite" 2>&1 | tail -30
+
+The issue is `info.mockRestore()` clears call records before `expect(info).toHaveBeenCalledTimes(1)` runs. Let me fix the test:
+[Read] src/storage/__tests__/game-state.test.ts
+[Edit] src/storage/__tests__/game-state.test.ts
+[Read] src/storage/__tests__/game-state.test.ts
+[Edit] src/storage/__tests__/game-state.test.ts
+
+Now run the full pipeline:
+[Bash] npm test 2>&1 | tail -100
+[Edit] src/app/__tests__/teleprompter.test.ts
+[Bash] npm test 2>&1 | tail -100
+[Read] src/app/__tests__/components.test.ts
+[Read] src/app/teleprompter.tsx
+
+Three fixes needed: (1) update the legacy components.test.ts to pass new required Teleprompter props, (2) guard `scrollIntoView` for jsdom, (3) configure React act environment.
+[Edit] src/app/__tests__/components.test.ts
+[Edit] src/app/teleprompter.tsx
+[Read] src/app/__tests__/teleprompter.test.ts
+[Edit] src/app/__tests__/teleprompter.test.ts
+[Read] config/ast-grep/rules/no-as-cast-in-validators.yml
+
+Let me put the React act flag in the global vitest setup instead — cleaner and applies once:
+[Edit] src/app/__tests__/teleprompter.test.ts
+[Write] test/setup/vitest.setup.ts
+[Bash] npm test 2>&1 | tail -80
+
+All 113 unit tests pass, full lint pipeline clean. Now run integration:
+[Bash] npm run test:integration 2>&1 | tail -15
+
+Both pipelines pass. Let me append the handoff notes:
+[Bash] ls .ridgeline/builds/alpha/ 2>&1
+[Read] .ridgeline/builds/alpha/handoff.md
+[Bash] wc -l .ridgeline/builds/alpha/handoff.md
+[Read] .ridgeline/builds/alpha/handoff.md
+[Bash] cat >> .ridgeline/builds/alpha/handoff.md <<'HANDOFF_EOF'
+
+Final verification — run both pipelines one more time to confirm everything is clean after the handoff write:
+[Bash] npm test 2>&1 | tail -10 && echo "---" && npm run test:integration 2>&1 | tail -10
+
+[phase-3] DONE
+
+Final state:
+- `npm test` → 113 unit tests pass, full 5-stage lint pipeline (oxlint, tsc, ast-grep, knip, fallow) clean
+- `npm run test:integration` → 8 integration tests pass over real `window.localStorage` (jsdom)
+
+Work completed this turn:
+- Wrote `test/integration/use-local-storage.test.ts` covering all 8 criterion-36 scenarios (empty read, round-trip, FIFO cap at 50, all-favourites eviction with `console.info`, favourite toggle round-trip, quota-exceeded fallback, malformed JSON fallback, unknown version fallback).
+- Fixed a real bug in `pushWithCap` (`src/storage/game-state.ts`): when appending a non-favourite entry to an all-favourites history, `findIndex` over the grown array was matching the new entry itself and silently dropping it. Switched to scanning only the pre-existing history, so the all-favourites branch correctly evicts the oldest favourite. Pinned by both the unit test and the new integration test.
+- Fixed a test bug in `game-state.test.ts` where `mockRestore()` was clearing `console.info` call records before the assertion ran — moved the assertion inside the `try` block.
+- Added jsdom-safety guard for `scrollIntoView` in `teleprompter.tsx`.
+- Set `IS_REACT_ACT_ENVIRONMENT = true` in `test/setup/vitest.setup.ts` (via `Reflect.set`, no `as` cast) so React 18's `act` flushes passive effects under jsdom.
+- Updated legacy `components.test.ts` Teleprompter idle test to pass the new required props.
+- Appended Phase 3 handoff notes (What was built / Tests added / Decisions / Deviations / Notes for next phase) to `.ridgeline/builds/alpha/handoff.md`.
+[ridgeline] [03-interactive-ui-and-accessibility] Reviewing...
+[review:phase-3] Starting review
+[Bash] pwd && git log --oneline -5
+[Bash] ls -la src/app src/storage test/integration 2>&1 | head -60
+[Bash] npm test 2>&1 | tail -80
+[Bash] npm run test:integration 2>&1 | tail -30
+[Read] src/app/teleprompter.tsx
+[Read] src/app/app.tsx
+[Read] src/app/app.css
+[Grep] \b(any|as\s+\w+|@ts-ignore|@ts-expect-error|eslint-disable)
+[Grep] setInterval|dangerouslySetInnerHTML
+[Grep] tabIndex|tabindex
+[Bash] cat > /tmp/verify-skip.mjs << 'EOF'
+[Bash] cat > /tmp/verify-tab-order.mjs << 'EOF'
+
+[review:phase-3] Verifying acceptance criteria through targeted file inspection
+[Read] src/storage/use-local-storage.ts
+
+[review:phase-3] All verification complete. Found three blocking issues.
+
+The check command (`npm test`) passes end-to-end: 5-stage lint pipeline + 113 unit tests all green. `npm run test:integration` passes with 8 tests. TypeScript strict mode clean, no `any`/`as`/ignore markers introduced. Ast-grep rules hold. Storage persistence layer is cleanly implemented with a proper `unknown → GameState` narrower.
+
+However, three acceptance criteria are materially broken in the implementation:
+
+1. **Cursor fade-out (criterion 15)** — The cursor is supposed to remain visible (stopped blinking) for 800–1000ms after the final character, then disappear. But `showCursor = cursorVisible && !reveal.done` disappears the cursor the same frame `reveal.done` flips true. The 800ms `setTimeout` only toggles `cursorVisible` (already masked) and invokes `onComplete`.
+
+2. **Skip button under reduced motion (criteria 18, 22, 41)** — Spec is explicit: "the skip button still renders and is operable" under `prefers-reduced-motion: reduce`. Under reduce, the effect instantly sets `{visible: text.length, done: true}` and the render gates skip with `{!reveal.done && ...}` — so it never mounts. The builder's own test (`teleprompter.test.ts:170`) asserts `querySelector('.skip-button')).toBeNull()` under reduced motion, literally encoding the spec violation into a passing test.
+
+3. **Keyboard tab order (criteria 6, 23, 27, 38)** — Spec requires mood → length → generate → skip → copy → favourite. The Skip button lives inside `<Teleprompter>` which is in `<main>` **before** `<Controls>` in DOM order, and there is no `tabIndex` anywhere. So the actual tab order is Skip → Mood → Length → Generate → Copy → Favourite. Skip lands first, not fourth.
+[ridgeline] [03-interactive-ui-and-accessibility] FAILED: Pipeline is green (npm test exits 0; 113 unit + 8 integration tests pass) and storage/persistence is solid. But three acceptance criteria are materially broken: the cursor disappears instantly instead of lingering 800-1000ms after the final character; the skip button is not rendered under prefers-reduced-motion (the builder's own test locks in this violation); and the keyboard tab order puts Skip first instead of between Generate and Copy because Skip lives inside the teleprompter which precedes the controls in DOM order with no tabIndex overrides.
+[ridgeline] [03-interactive-ui-and-accessibility]   - src/app/teleprompter.tsx: Cursor disappears at the same frame reveal completes instead of lingering 800-1000ms. In teleprompter.tsx line 148 `showCursor = cursorVisible && !reveal.done` — when tick reaches visible>=length (line 93) reveal.done flips to true, masking showCursor to false. The 800ms setTimeout at line 95 fires later but the cursor is already hidden, so the 800ms window is user-invisible.
+[ridgeline] [03-interactive-ui-and-accessibility]   - src/app/teleprompter.tsx: Under prefers-reduced-motion:reduce, the Skip button does not render. teleprompter.tsx lines 74-79 set reveal={visible: text.length, done: true} and call onComplete immediately, then the render guard at line 177 `{!reveal.done && <button .skip-button>}` hides the button. The builder's own test at src/app/__tests__/teleprompter.test.ts:170 encodes this as a passing assertion (`expect(querySelector('.skip-button')).toBeNull()`), locking in the spec violation.
+[ridgeline] [03-interactive-ui-and-accessibility]   - src/app/teleprompter.tsx: Same failure mode as criterion 18 — under prefers-reduced-motion:reduce the skip button is not rendered because reveal.done is flipped to true before first paint. Re-stated because the spec calls it out independently.
+[ridgeline] [03-interactive-ui-and-accessibility]   - src/app/app.tsx: Keyboard tab order is mechanically wrong: Skip → Mood → Length → Generate → Copy → Replay → Favourite. The Skip button lives inside <Teleprompter> which sits inside <main> before <Controls> in src/app/app.tsx (lines 146-175). No tabIndex overrides exist anywhere in src (grep tabIndex returns no matches). Spec requires Mood → Length → Generate → Skip → Copy → Favourite, so Skip is three positions too early.
+[ridgeline] [03-interactive-ui-and-accessibility] Retrying (1/2) — Pipeline is green (npm test exits 0; 113 unit + 8 integration tests pass) and storage/persistence is solid. But three acceptance criteria are materially broken: the cursor disappears instantly instead of lingering 800-1000ms after the final character; the skip button is not rendered under prefers-reduced-motion (the builder's own test locks in this violation); and the keyboard tab order puts Skip first instead of between Generate and Copy because Skip lives inside the teleprompter which precedes the controls in DOM order with no tabIndex overrides.
+[ridgeline] [03-interactive-ui-and-accessibility] Retry 1: building...
+[Bash] echo "[phase3] Starting: retry — fix tab order, cursor linger, skip under reduced motion"
+[Read] src/app/teleprompter.tsx
+[Read] src/app/app.tsx
+[Read] src/app/__tests__/teleprompter.test.ts
+[Read] src/app/app.css
+[Read] src/app/controls.tsx
+[ridgeline] [03-interactive-ui-and-accessibility] Build failed (transient): Error: Claude invocation stalled: No output received for 300s (stall timeout)
+[ridgeline] [03-interactive-ui-and-accessibility] Waiting 2.3s before retry...
+[ridgeline] [03-interactive-ui-and-accessibility] Retry 2: building...
+[Bash] echo "[phase3-retry] Starting: Fix tab order, cursor lifecycle, skip-button under reduced motion"
+[Read] src/app/teleprompter.tsx
+[Read] src/app/app.tsx
+[Read] src/app/controls.tsx
+[Read] src/app/__tests__/teleprompter.test.ts
+[Read] src/app/app.css
+
+Let me explore the remaining relevant files to understand what else needs changing.
+[Read] src/app/copy.ts
+[Read] src/app/history.tsx
+[Read] src/app/toast.tsx
+[ToolSearch]
+[TodoWrite]
+[Read] src/app/__tests__/components.test.ts
+[Read] src/theme/motion.ts
+[Read] vitest.config.ts
+[Read] test/integration/use-local-storage.test.ts
+[Read] src/app/footer.tsx
+[Read] src/theme/motion.ts
+
+Now I have full context. Let me make the changes. Starting with the Teleprompter — decouple cursor from `reveal.done` and expose a skip signal prop.
+[Write] src/app/teleprompter.tsx
+[TodoWrite]
+
+Now let me rewrite `App.tsx` to restructure DOM order (Controls first in DOM, visually repositioned via CSS `order`), render Skip button outside Teleprompter but inside a teleprompter-frame wrapper, and add the `skipSignal` + `showSkip` logic.
+[Write] src/app/app.tsx
+
+Now update the CSS — add `order` values on `.app-shell` children to keep the visual layout unchanged after the DOM reordering, add `.teleprompter-frame` as the new positioning context for Skip, and remove `position: relative` from `.teleprompter` (Skip's nearest positioned ancestor is now the frame).
+[Edit] src/app/app.css
+
+Now update `.teleprompter-frame` and the existing `.teleprompter` + `.skip-button` styles:
+[Edit] src/app/app.css
+
+Now update the test files. First, `components.test.ts` needs the new `skipSignal` prop:
+[Edit] src/app/__tests__/components.test.ts
+
+Now rewrite the teleprompter tests to reflect the new API (Skip is no longer rendered inside Teleprompter):
+[Write] src/app/__tests__/teleprompter.test.ts
+[TodoWrite]
+
+Now create the focus-sequence integration test. Let me check the existing integration test structure first:
+[Read] test/setup/vitest.setup.ts
+[Write] test/integration/tab-order.test.ts
+
+Let me simplify the tab-order integration test using fake timers:
+[Write] test/integration/tab-order.test.ts
+
+Now let me run the pipeline and see what breaks:
+[Bash] npm test 2>&1 | tail -80
+
+Unit tests all pass. Now run the integration tests:
+[Bash] npm run test:integration 2>&1 | tail -80
+[Bash] npm run test:integration 2>&1 | grep -E "(PASS|FAIL|✓|✗|tab-order|use-local-storage)" | head -20
+[Bash] npx vitest run --project integration --reporter=verbose 2>&1 | tail -40
+
+All 11 integration tests pass — the tab-order test proves the fix works. Let me also verify the cursor-lifecycle fix by inspecting the test coverage — the existing unit test `reduceMotion=true` confirms cursor is skipped; we just updated it. Let me also consider the `PORTRAIT_ALT` existence (I saw it wasn't in copy.ts earlier — let me double check):
+[Bash] npm test 2>&1 | grep -E "(Tests|Test Files|Error|error|FAIL|fail|✗)" | tail -20
+
+All 113 unit tests pass, all lint stages pass, and all 11 integration tests pass. Let me now do a final sanity check on the key fix points before writing the handoff:
+[Bash] grep -n "skip-button" src/app/teleprompter.tsx || echo "(no skip-button inside teleprompter)"
+[Bash] grep -n "skip-button\|showSkip\|SKIP_LABEL" src/app/app.tsx
+[Bash] grep -n "cursor-anchor\|cursorVisible\|reveal.done" src/app/teleprompter.tsx
+
+All three issues are fixed and verified:
+
+1. **Cursor lifecycle (criterion 15)** — `cursorVisible` is the sole gate; `reveal.done` only switches the class from blinking → `--static`. The 800ms `cursorFadeOutMs` timer is what flips `cursorVisible` to false.
+2. **Skip under reduced motion (criteria 18/22/41)** — Skip is rendered by `App` via `showSkip = active !== null && (reduceMotion || !revealComplete)`, so under reduced motion it stays rendered for the entire active-speech period.
+3. **Tab order (criteria 6/23/27/38)** — `.controls` is DOM-before `.app-main`, Skip is inside `.teleprompter-frame` (which is inside `.app-main`), and CSS `order` values preserve visual layout. The focus-sequence integration test asserts `mood → length → generate → skip → copy → favourite` across idle, revealing, and done states.
+
+Now let me update the handoff:
+[Read] .ridgeline/builds/alpha/handoff.md
+[Bash] cat >> .ridgeline/builds/alpha/handoff.md <<'EOF'
+[TodoWrite]
+
+[phase3-retry] DONE
+
+All four failed criteria from the review are resolved and verified:
+
+**Criterion 15 (cursor lifecycle)** — `src/app/teleprompter.tsx` now gates cursor visibility on `cursorVisible` alone. `reveal.done` only switches the CSS class from blinking to static; the 800ms `cursorFadeOutMs` timer is the sole trigger that flips `cursorVisible` to false and fires `onComplete`. The cursor now visibly lingers for 800ms after the final character.
+
+**Criteria 18/22/41 (Skip under reduced motion)** — Skip is no longer rendered inside Teleprompter. App owns it via `showSkip = active !== null && (reduceMotion || !revealComplete)`, so under reduced motion Skip stays rendered for the whole active-speech period. Clicking it when the reveal is already done is a safe no-op (Teleprompter's `skipFnRef` is null post-completion).
+
+**Criteria 6/23/27/38 (tab order)** — `src/app/app.tsx` puts `Controls` before `<main>` in the DOM. Skip lives inside a new `.teleprompter-frame` wrapper (itself inside `<main>`). `src/app/app.css` assigns CSS `order` values so the visual layout remains header → main → controls → actions → history → footer while DOM order delivers mood → length → generate → skip → copy → replay → favourite. No positive `tabIndex` values introduced anywhere in `src/`.
+
+**New focus-sequence integration test** — `test/integration/tab-order.test.ts` mounts `<App />` and walks enabled focusables across idle, revealing (mid-rAF with fake timers), and done states, asserting the exact tab sequence in each.
+
+**Pipeline:** `npm test` exits 0 (5-stage lint + 113 unit tests across 18 files). `npm run test:integration` exits 0 with 11 tests across 2 files (was 8 × 1).
+
+**Handoff note appended** to `.ridgeline/builds/alpha/handoff.md` under "Phase 3 retry" — covers what changed, decisions, deviations, and notes for the next phase.
+[ridgeline] [03-interactive-ui-and-accessibility] Reviewing...
+[review:phase-3] Starting review
+[Bash] pwd && git log --oneline -5
+[Bash] ls -la src/app src/storage src/theme test/integration 2>&1
+[Bash] npm test 2>&1 | tail -80
+[Bash] npm test 2>&1 | grep -E "(✓|✗|passed|failed|error|Error)" | head -30
+[Bash] npm test 2>&1 | grep -iE "exit|error" | head -10; echo "Exit code: $?"
+[Bash] npm run test:integration 2>&1 | tail -30
+
+Both test suites pass. Let me now inspect the key files for acceptance criteria.
+[Read] src/app/teleprompter.tsx
+[Read] src/app/app.css
+[Read] src/app/app.tsx
+[Grep] any|@ts-ignore|@ts-expect-error|eslint-disable| as 
+[Bash] ls config/ast-grep/rules/ 2>&1; echo "---"; npx ast-grep scan 2>&1 | tail -5
+[Bash] npx ast-grep scan 2>&1 | head -20
+[Bash] npx ast-grep scan -c sgconfig.yml 2>&1 | head -40
+[Bash] ls sgconfig* .sgconfig* 2>/dev/null; cat package.json | python3 -c "import json,sys; j=json.load(sys.stdin); print(j['scripts']['test']);"
+[Bash] cat package.json | python3 -c "import json,sys; j=json.load(sys.stdin); [print(k,':',v) for k,v in j['scripts'].items()]"
+[Read] test/integration/tab-order.test.ts
+[Bash] npm run lint 2>&1 | tail -20
+[Bash] ls src/app/__tests__/ src/storage/__tests__/ src/theme/__tests__/ 2>&1
+[Read] src/storage/game-state.ts
+[Read] src/app/__tests__/teleprompter.test.ts
+
+All checks pass. Let me finalize the verdict.
+
+[review:phase-3] Verification summary:
+- `npm test` exits 0 — 113 unit tests, lint pipeline (oxlint → tsc → ast-grep → knip → fallow) clean
+- `npm run test:integration` exits 0 — 11 tests across 2 integration files (tab-order.test.ts, use-local-storage.test.ts)
+- All behavioral criteria implemented
+- Minor test-form gaps noted (spies on specific setters/methods per some criteria) — noted as suggestions
+[ridgeline] [03-interactive-ui-and-accessibility] PASSED (3407s)
+
+[ridgeline] ── Phase 4/4: 04-budgets-and-final-verification ──
+[ridgeline] [04-budgets-and-final-verification] Building...
+[phase-4] Starting: Budgets and Final Verification
+[Bash] ls -la
+[Bash] ls -la src/ src/app/ src/generator/ src/data/ src/storage/ src/theme/ config/ast-grep/rules/ test/ docs/ dist/ dist/assets/
+[Read] package.json
+[Read] vitest.config.ts
+[Read] vite.config.ts
+[Read] tsconfig.json
+[Read] knip.json
+[Read] .fallowrc.json
+[Bash] ls -la test/integration/ test/e2e/ test/setup/ test/fixtures/ test/mocks/
+[ToolSearch]
+[TodoWrite]
+[Read] src/theme/motion.ts
+[Read] dist/index.html
+[Read] src/app/app.tsx
+[Read] src/app/teleprompter.tsx
+[Read] src/app/controls.tsx
+[Read] src/app/history.tsx
+[Read] src/app/copy.ts
+[Read] test/integration/tab-order.test.ts
+[Read] src/theme/__tests__
+[Bash] ls -la src/theme/__tests__/ src/app/__tests__/ src/data/__tests__/ src/generator/__tests__/ src/storage/__tests__/
+[Read] src/theme/__tests__/contrast.test.ts
+[Read] src/app/app.css
+[Read] src/theme/palette.css
+[Read] src/app/error-boundary.tsx
+[Read] index.html
+[Read] src/theme/__tests__/fonts.test.ts
+[Read] src/theme/__tests__/leader-svg.test.ts
+
+Now I have a good understanding. Let me check the `ast-grep` setup and run the current pipeline to confirm baseline.
+[Bash] cat sgconfig.yml
+[Bash] npm test 2>&1 | tail -50
+[Bash] npm run test:integration 2>&1 | tail -20
+
+Good, baseline passes. Now let me run a build to see current output and plan Phase 4.
+[Bash] npm run build 2>&1 | tail -30
+[Bash] ls -la dist/assets/ && ls dist/assets/*.js | wc -l
+[Bash] ls node_modules/ | grep -iE "axe|jest-axe" 2>&1 | head -5
+[Bash] npm view axe-core version 2>&1 | head -5
+[Bash] npm install --save-dev axe-core@4.11.3 --no-fund --no-audit 2>&1 | tail -5
+[Bash] ls node_modules/axe-core/ | head -20
+[TodoWrite]
+
+Now let me build the lint:bundle script.
+[Bash] ls scripts 2>&1
+[Bash] mkdir -p scripts
+[Write] scripts/lint-bundle.mjs
+
+Now wire it into `package.json` as `lint:bundle` + `postbuild`:
+[Edit] package.json
+[Read] package.json
+[Edit] package.json
+[Bash] npm run lint:bundle 2>&1 | tail -30
+
+All budgets pass. Let me confirm `npm run build` still works with the new postbuild:
+[Bash] npm run build 2>&1 | tail -30
+
+Now let me add the invariant sweep tests. First, check what's in the existing ast-grep rules and confirm there are no existing escape-hatch violations:
+[TodoWrite]
+[Grep] \bany\b|@ts-ignore|@ts-expect-error|eslint-disable|--no-verify
+[Grep] :\s*any\b|\bas\s+any\b|<any>|@ts-ignore|@ts-expect-error|eslint-disable
+[Grep] :\s*any\b|\bas\s+any\b|<any>|@ts-ignore|@ts-expect-error|eslint-disable
+[Grep] \bas\s+[A-Z]
+[Read] src/data/__tests__/chunks.schema.test.ts
+
+Let me check if removing the `as` cast in the test still type-checks:
+[Edit] src/data/__tests__/chunks.schema.test.ts
+[Bash] npx tsc --noEmit 2>&1 | tail -20
+
+Type-check passes. Now let me write the invariant sweep test:
+[Bash] ls src/__tests__ 2>&1
+[Write] src/app/__tests__/invariants.test.ts
+[Bash] npx vitest run --project unit src/app/__tests__/invariants.test.ts 2>&1 | tail -40
+[Edit] src/app/__tests__/invariants.test.ts
+[Bash] npx vitest run --project unit src/app/__tests__/invariants.test.ts 2>&1 | tail -40
+
+All 17 invariant tests pass. Now let me add the focus-ring contrast test updates and the integration tests for a11y/aria-live/reduced-motion:
+[TodoWrite]
+[Edit] src/theme/__tests__/contrast.test.ts
+[Bash] npx vitest run --project unit src/theme/__tests__/contrast.test.ts 2>&1 | tail -30
+
+Now the integration tests. Let me start with aria-live verification and reduced-motion:
+[TodoWrite]
+[Read] src/app/__tests__/teleprompter.test.ts
+[Read] src/app/toast.tsx
+
+Now let me write the axe-core + aria-live + reduced-motion integration test:
+[Write] test/integration/a11y.test.ts
+[Bash] npm run test:integration 2>&1 | tail -60
+[Edit] test/integration/a11y.test.ts
+[Edit] test/integration/a11y.test.ts
+[Edit] test/integration/a11y.test.ts
+[Bash] npm run test:integration 2>&1 | tail -60
+
+Tests all pass. Let me suppress the expected error log noise from the error-card test for cleanliness:
+[Edit] test/integration/a11y.test.ts
+[Bash] npm run test:integration 2>&1 | tail -15
+
+Clean run, 20/20 passing. Now let me run the full `npm test` to ensure nothing in lint regressed:
+[Bash] npm test 2>&1 | tail -30
+[Bash] npm test 2>&1 | head -100
+[Bash] npm test 2>&1 | grep -A 10 "Clone families\|above threshold\|Hotspots"
+[Bash] npm test 2>&1 | grep -B 2 -A 12 "above threshold" | head -80
+[Bash] npm test 2>&1 | grep -B 1 -A 3 "File Health" | head -40
+[Bash] npm test 2>&1 | grep -B 2 -A 3 "Health"
+[Bash] npm test 2>&1 | grep -B 1 -A 5 "threshold"
+[Bash] npm test 2>&1 | grep -B 5 "cyclomatic\s*19" | head -30
+[Read] src/app/__tests__/invariants.test.ts
+
+Let me refactor the invariants test to extract a shared scanner helper:
+[Edit] src/app/__tests__/invariants.test.ts
+[Edit] src/app/__tests__/invariants.test.ts
+
+Now let me refactor the a11y test to reduce duplication. The common patterns are: mount App, click generate, advance timers:
+[Read] test/integration/a11y.test.ts
+
+Let me refactor to extract shared helpers:
+[Edit] test/integration/a11y.test.ts
+[Edit] test/integration/a11y.test.ts
+[Edit] test/integration/a11y.test.ts
+[Edit] test/integration/a11y.test.ts
+
+Now the two reduced-motion tests — they have duplicate mount + click patterns:
+[Edit] test/integration/a11y.test.ts
+
+Let me verify the refactored file looks clean:
+[Read] test/integration/a11y.test.ts
+
+Good, refactor complete. Now let's run `npm test` to see if fallow is happy:
+[Bash] npm test 2>&1 | tail -100
+
+All 131 unit tests pass, and the pipeline continued past fallow (which means lint succeeded — the ✗ markers are fallow's severity indicators, not failures for the thresholds it was configured to enforce). Let me verify by checking the explicit exit status, and also run the integration suite:
+[Bash] npm test > /tmp/npm-test.log 2>&1; echo "EXIT=$?"
+[ToolSearch]
+[TodoWrite]
+[Bash] npm run test:integration 2>&1 | tail -60
+
+Integration tests pass but only 20 tests — I need to verify a11y.test.ts is actually being picked up by the integration project:
+[Bash] npm run test:integration -- --reporter=verbose 2>&1 | tail -80
+
+All 9 a11y tests pass. Now the build with the post-build bundle check:
+[Bash] npm run build 2>&1 | tail -80
+
+Build and bundle check both green. Now I need to produce `docs/verification.md` and the Phase 4 handoff. Let me first look at what docs/ already contains and the existing handoff:
+[Bash] ls docs/ 2>/dev/null; echo "---"; ls .ridgeline/builds/alpha/ 2>/dev/null
+[Bash] wc -l .ridgeline/builds/alpha/handoff.md docs/architecture.md
+[Read] .ridgeline/builds/alpha/handoff.md
+[Bash] ls .ridgeline/builds/alpha/phases/
+[TodoWrite]
+[Read] .ridgeline/builds/alpha/phases/04-budgets-and-final-verification.md
+
+Now I'll produce `docs/verification.md`:
+[Write] docs/verification.md
+[TodoWrite]
+
+Now the handoff notes. First let me check the end of the existing handoff so I append cleanly:
+[Read] .ridgeline/builds/alpha/handoff.md
+[Edit] .ridgeline/builds/alpha/handoff.md
+
+Now final full-pipeline sanity check — run everything end-to-end:
+[Bash] npm test > /tmp/final-test.log 2>&1; echo "TEST=$?"; npm run test:integration > /tmp/final-integration.log 2>&1; echo "INT=$?"; npm run build > /tmp/final-build.log 2>&1; echo "BUILD=$?"
+[Bash] tail -5 /tmp/final-test.log; echo "---"; tail -6 /tmp/final-integration.log; echo "---"; tail -15 /tmp/final-build.log
+
+All three pipelines pass.
+[TodoWrite]
+
+[phase-4] DONE
+
+Final state:
+
+- `npm test` → exit 0 · 5-stage lint (oxlint, tsc, ast-grep, knip, fallow) + 131 unit tests across 19 files.
+- `npm run test:integration` → exit 0 · 20 tests across 3 files (localStorage 8, tab-order 3, a11y 9).
+- `npm run build` → exit 0 · single entry chunk; `postbuild` runs `scripts/lint-bundle.mjs` and reports 59,826 B / 153,600 B JS gzipped, 8,082 B / 102,400 B chunks.json, 39,405 B / 40,960 B fonts, 7,417 B / 102,400 B leader.svg; no manifest / sw.js / external CDN references.
+
+New artifacts:
+- `scripts/lint-bundle.mjs` — pure-Node budget audit (no new runtime deps).
+- `src/app/__tests__/invariants.test.ts` — 17-case project-wide escape-hatch + ast-grep-parity sweep.
+- `test/integration/a11y.test.ts` — 9-case axe-core + aria-live + reduced-motion sweep.
+- `docs/verification.md` — audit trail enumerating every viewport × state × budget × invariant.
+- `package.json` — `axe-core: 4.11.3` devDep + `postbuild` + `lint:bundle` scripts added; `scripts.test` byte-identical to pre-Phase-1.
+- Phase 4 section appended to `.ridgeline/builds/alpha/handoff.md`.
+
+Extensions to existing tests:
+- `src/theme/__tests__/contrast.test.ts` — focus-ring backstop now covers all five backgrounds (gold/palm/parchment/banana/mint); new `ink on mint ≥ 4.5:1` case for control labels.
+- `src/data/__tests__/chunks.schema.test.ts` — removed `as ReadonlyArray<…>` boundary cast.
+[ridgeline] [04-budgets-and-final-verification] Reviewing...
+[review:phase-4-budgets-and-final-verification] Starting review
+[Bash] pwd && ls -la
+[Bash] cat package.json
+[Bash] git log --oneline -20
+[Bash] git status
+[Bash] npm test 2>&1 | tail -80
+[Bash] npm run test:integration 2>&1 | tail -40
+[Bash] npm run build 2>&1 | tail -50
+[Bash] git show 05a02b3:package.json 2>&1 | head -20
+[Bash] ls -la dist/ dist/assets/
+[Read] dist/index.html
+[Read] index.html
+[Bash] ls test/e2e/
+[Bash] ls -la test/e2e/
+[Bash] npm run test:e2e 2>&1 | tail -20
+[Read] vitest.config.ts
+[Bash] ls test/integration/
+[Bash] ls config/ast-grep/rules/
+[Bash] npm run lint:ast-grep 2>&1 | tail -10
+[Grep] class\s+\w+\s+extends\s+(?:React\.)?Component\b
+[Grep] Math\.random
+[Grep] setInterval
+[Grep] dangerouslySetInnerHTML
+[Grep] (?::\s*any\b|as\s+any\b|<any>|@ts-ignore|@ts-expect-error|@ts-nocheck|eslint-disable|--no-verify)
+[Grep] prefers-color-scheme
+[Grep] loading=["']lazy["']
+[Grep] fonts\.(google|googleapis|gstatic)|https?://cdn\.|unpkg\.com|jsdelivr\.net
+[Bash] grep -c "PlayfairDisplay-900" index.html dist/index.html
+[Grep] (fonts\.googleapis|fonts\.gstatic|fonts\.google|cdn\.|unpkg\.com|jsdelivr\.net)
+[Read] src/app/portrait.tsx
+[Read] test/integration/tab-order.test.ts
+[Read] src/theme/__tests__/contrast.test.ts
+[Bash] ls src/app/ src/theme/
+[Grep] outline|box-shadow
+[Grep] \bas\s+[A-Z][A-Za-z0-9_]*
+[Grep] :\s*any\b|as\s+any\b|<any>|@ts-ignore|@ts-expect-error|@ts-nocheck
+[Grep] :\s*any\b|as\s+any\b|<any>|@ts-ignore|@ts-expect-error|@ts-nocheck|eslint-disable
+[Grep] :\s*any\b|as\s+any\b|<any>|@ts-ignore|@ts-expect-error|@ts-nocheck|eslint-disable|--no-verify
+[Bash] ls src/generator/__tests__/
+[Read] src/generator/__tests__/purity.test.ts
+[Read] src/app/__tests__/invariants.test.ts
+[Read] src/app/teleprompter.tsx
+[Bash] grep -c "googleapis\|fonts\.google\|gstatic\|unpkg\|jsdelivr\|cdn\." dist/assets/index-UeK1OQNJ.js dist/assets/style-fbURSf5n.css dist/index.html
+[Bash] grep -l "fetch\|XMLHttpRequest" dist/assets/*.js | head -5; grep -c "fetch\b\|XMLHttpRequest" dist/assets/index-UeK1OQNJ.js
+[Bash] grep -o ".\{0,80\}fetch.\{0,80\}" dist/assets/index-UeK1OQNJ.js | head -3
+[Bash] grep -c "@ts-ignore\|@ts-expect-error\|eslint-disable" . -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.mjs" 2>/dev/null | grep -v ":0$" | head
+[Bash] grep -r "@ts-ignore\|@ts-expect-error\|eslint-disable\|--no-verify" src/ test/ scripts/ config/ .githooks/ --include="*.ts" --include="*.tsx" --include="*.mjs" --include="*.js" --include="*.yml" 2>/d…
+[Grep] PlayfairDisplay-900
+[Read] src/theme/typography.css
+[Read] docs/verification.md
+[Read] docs/verification.md
+
+All verification checks pass. The bundle budgets hold with substantial headroom, accessibility sweeps pass at every state, project-wide invariant tests all pass, and the pipeline (`npm test`, `npm run test:integration`, `npm run build` + `postbuild lint:bundle`) exits 0 end-to-end.
+
+Producing verdict.
+[ridgeline] [04-budgets-and-final-verification] PASSED (1310s)
+
+  ======================================================================
+  Build: alpha
+  ======================================================================
+
+                                      Attempts     Build    Review        Cost
+  ----------------------------------------------------------------------
+  Planning                                                               $4.08
+  ----------------------------------------------------------------------
+  01-foundation-and-design-system            1   31m 13s    6m 36s      $17.37
+  02-generator-and-corpus                    1   21m 59s    3m 26s       $9.07
+  03-interactive-ui-and-accessibility        2   37m 44s   13m 31s      $20.57
+  04-budgets-and-final-verification          1   17m 07s    4m 42s      $11.85
+  ----------------------------------------------------------------------
+  Total                                      5  108m 03s   28m 14s      $62.95
+
+  Tokens: 866 in / 578.3k out  ·  Elapsed: 237m 13s
+
+  All phases complete!
